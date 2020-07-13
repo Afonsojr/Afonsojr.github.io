@@ -119,6 +119,44 @@ h1 {
   color: var(--primary-color);
 }
 
+.social {
+  align-items: center;
+  vertical-align: center;
+}
 .social a {
   margin: 0 5px;
+  /* align-items: center; */
+}
+
+.leftImagePicture {
+  position: fixed;
+  border-radius: 50%;
+  max-width: 320px;
+  align-items: center;
+  left: calc(50vw - 150px);
+  top: calc(50vh - 400px);
+  border: 10px solid rgba(255, 255, 255, 0.1);
+  z-index: 1;
+}
+
+.main-text-container {
+  position: relative;
+  align-self: center;
+  /* width: 100%; */
+}
+
+.main-text {
+  z-index: 13;
+  position: relative;
+  text-align: left;
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.main-text h1.ah-headline {
+  color: #fff;
+  font-weight: 500;
+  margin: 15px 0 0;
+  text-transform: uppercase;
+  font-size: 60px;
 }
