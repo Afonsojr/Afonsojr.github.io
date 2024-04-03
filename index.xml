@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+    <channel>
+      <title>🪴 Snow </title>
+      <link>https://quartz.jzhao.xyz</link>
+      <description>Últimas 10 notas on 🪴 Snow </description>
+      <generator>Quartz -- quartz.jzhao.xyz</generator>
+      <item>
+    <title>Operadores</title>
+    <link>https://quartz.jzhao.xyz/02-Programacao/Javascript/basico/Operadores</link>
+    <guid>https://quartz.jzhao.xyz/02-Programacao/Javascript/basico/Operadores</guid>
+    <description>básico.</description>
+    <pubDate>Wed, 03 Apr 2024 20:23:30 GMT</pubDate>
+  </item><item>
+    <title>Variáveis e tipos de dados</title>
+    <link>https://quartz.jzhao.xyz/02-Programacao/Javascript/basico/Vari%C3%A1veis-e-tipos-de-dados</link>
+    <guid>https://quartz.jzhao.xyz/02-Programacao/Javascript/basico/Vari%C3%A1veis-e-tipos-de-dados</guid>
+    <description>básico.</description>
+    <pubDate>Wed, 03 Apr 2024 20:22:13 GMT</pubDate>
+  </item><item>
+    <title>básico</title>
+    <link>https://quartz.jzhao.xyz/02-Programacao/Javascript/b%C3%A1sico</link>
+    <guid>https://quartz.jzhao.xyz/02-Programacao/Javascript/b%C3%A1sico</guid>
+    <description>Javascript Básico Visão Geral: Nesta lição, vamos explorar os conceitos fundamentais do JavaScript, uma linguagem de programação essencial para o desenvolvimento web ...</description>
+    <pubDate>Wed, 03 Apr 2024 20:20:08 GMT</pubDate>
+  </item><item>
+    <title>Aprofundando em Classes em POO</title>
+    <link>https://quartz.jzhao.xyz/02-Programacao/Python/OOP/Aprofundando-em-Classes-em-POO</link>
+    <guid>https://quartz.jzhao.xyz/02-Programacao/Python/OOP/Aprofundando-em-Classes-em-POO</guid>
+    <description>Introdução Neste módulo, vamos mergulhar no conceito de classes em POO em Python. Abordaremos os seguintes tópicos: Definição e estrutura de classes Atributos e métodos Encapsulamento Construtores e inicializadores Modificadores de acesso Herança Polimorfismo Definição e Estrutura de Classes Uma classe é um modelo que define a estrutura e o comportamento de um tipo de objeto.</description>
+    <pubDate>Wed, 03 Apr 2024 18:50:50 GMT</pubDate>
+  </item><item>
+    <title>Guia de estudo de OOP em python</title>
+    <link>https://quartz.jzhao.xyz/02-Programacao/Python/OOP/Guia-de-estudo-de-OOP-em-python</link>
+    <guid>https://quartz.jzhao.xyz/02-Programacao/Python/OOP/Guia-de-estudo-de-OOP-em-python</guid>
+    <description>O que é Programação Orientada a Objetos (POO)? A Programação Orientada a Objetos (POO) é um paradigma de programação que organiza o código em torno de objetos ...</description>
+    <pubDate>Wed, 03 Apr 2024 18:08:30 GMT</pubDate>
+  </item><item>
+    <title>IA Tutor</title>
+    <link>https://quartz.jzhao.xyz/04-prompts/IA-Tutor</link>
+    <guid>https://quartz.jzhao.xyz/04-prompts/IA-Tutor</guid>
+    <description>You are TutorAI, a college professor that has a PhD, master’s degree, bachelor’s degree, and associate degree in all fields relevant to the student’s current learning topics, questions, ...</description>
+    <pubDate>Wed, 03 Apr 2024 18:07:38 GMT</pubDate>
+  </item><item>
+    <title>99-Barril-de-pólvora</title>
+    <link>https://quartz.jzhao.xyz/03-movel/mother-of-learning/99-Barril-de-p%C3%B3lvora</link>
+    <guid>https://quartz.jzhao.xyz/03-movel/mother-of-learning/99-Barril-de-p%C3%B3lvora</guid>
+    <description> Barril de pólvora Capítulo 099 Barril de pólvora Marcar uma reunião com Daimen foi fácil desta vez. Não que tenha sido realmente difícil fazer isso, mas depois de aprender o básico da língua e costumes locais ao longo das reinicializações, a tarefa se tornou totalmente trivial.</description>
+    <pubDate>Wed, 03 Apr 2024 17:47:40 GMT</pubDate>
+  </item><item>
+    <title>98-Sob-a-superfície</title>
+    <link>https://quartz.jzhao.xyz/03-movel/mother-of-learning/98-Sob-a-superf%C3%ADcie</link>
+    <guid>https://quartz.jzhao.xyz/03-movel/mother-of-learning/98-Sob-a-superf%C3%ADcie</guid>
+    <description>...</description>
+    <pubDate>Wed, 03 Apr 2024 17:47:40 GMT</pubDate>
+  </item><item>
+    <title>97-Ilusório</title>
+    <link>https://quartz.jzhao.xyz/03-movel/mother-of-learning/97-Ilus%C3%B3rio</link>
+    <guid>https://quartz.jzhao.xyz/03-movel/mother-of-learning/97-Ilus%C3%B3rio</guid>
+    <description> Ilusório Capítulo 097 Ilusório De pé no telhado de um dos prédios da academia, os dois grupos se encaravam sem falar. A situação já era tensa, e as ameaças de Jornak só a tornavam mais incômoda e instável.</description>
+    <pubDate>Wed, 03 Apr 2024 17:47:40 GMT</pubDate>
+  </item><item>
+    <title>96-Contrato</title>
+    <link>https://quartz.jzhao.xyz/03-movel/mother-of-learning/96-Contrato</link>
+    <guid>https://quartz.jzhao.xyz/03-movel/mother-of-learning/96-Contrato</guid>
+    <description>...</description>
+    <pubDate>Wed, 03 Apr 2024 17:47:40 GMT</pubDate>
+  </item>
+    </channel>
+  </rss>
