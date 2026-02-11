@@ -331,11 +331,6 @@
       100% { opacity: 0; transform: translateY(-20px); }
     }
 
-    @keyframes pulse-hint {
-      from { transform: scale(1); }
-      to { transform: scale(1.08); }
-    }
-
     /* Board Geométrico */
     .board {
       position: relative;
@@ -1216,14 +1211,14 @@
 
   <script>
     const COLORS = [
-      { name: "Blue", value: "#00d9ff", symbol: "◆", pattern: "linear-gradient(135deg, transparent 25%, rgba(255,255,255,0.1) 25%, rgba(255,255,255,0.1) 50%, transparent 50%)" },
-      { name: "Purple", value: "#b829dd", symbol: "●", pattern: "radial-gradient(circle at 30% 30%, rgba(255,255,255,0.15) 0%, transparent 50%)" },
-      { name: "Amber", value: "#ffaa00", symbol: "▲", pattern: "linear-gradient(45deg, transparent 40%, rgba(0,0,0,0.2) 40%, rgba(0,0,0,0.2) 60%, transparent 60%)" },
-      { name: "Emerald", value: "#00ff88", symbol: "■", pattern: "repeating-linear-gradient(90deg, transparent, transparent 10px, rgba(0,0,0,0.1) 10px, rgba(0,0,0,0.1) 20px)" },
-      { name: "Crimson", value: "#ff3366", symbol: "★", pattern: "radial-gradient(circle at 70% 70%, rgba(255,255,255,0.1) 0%, transparent 40%)" },
-      { name: "Pink", value: "#ff00aa", symbol: "♦", pattern: "linear-gradient(135deg, rgba(0,0,0,0.1) 25%, transparent 25%, transparent 50%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1) 75%, transparent 75%)" },
-      { name: "Cyan", value: "#00ffff", symbol: "○", pattern: "repeating-radial-gradient(circle at 50% 50%, transparent 0, transparent 5px, rgba(0,0,0,0.1) 5px, rgba(0,0,0,0.1) 10px)" },
-      { name: "Lime", value: "#aaff00", symbol: "□", pattern: "linear-gradient(0deg, transparent 50%, rgba(0,0,0,0.1) 50%)" },
+      { name: "Blue", value: "var(--neon-blue)", symbol: "◆", pattern: "linear-gradient(135deg, transparent 25%, rgba(255,255,255,0.1) 25%, rgba(255,255,255,0.1) 50%, transparent 50%)" },
+      { name: "Purple", value: "var(--neon-purple)", symbol: "●", pattern: "radial-gradient(circle at 30% 30%, rgba(255,255,255,0.15) 0%, transparent 50%)" },
+      { name: "Amber", value: "var(--neon-amber)", symbol: "▲", pattern: "linear-gradient(45deg, transparent 40%, rgba(0,0,0,0.2) 40%, rgba(0,0,0,0.2) 60%, transparent 60%)" },
+      { name: "Emerald", value: "var(--neon-emerald)", symbol: "■", pattern: "repeating-linear-gradient(90deg, transparent, transparent 10px, rgba(0,0,0,0.1) 10px, rgba(0,0,0,0.1) 20px)" },
+      { name: "Crimson", value: "var(--neon-crimson)", symbol: "★", pattern: "radial-gradient(circle at 70% 70%, rgba(255,255,255,0.1) 0%, transparent 40%)" },
+      { name: "Pink", value: "var(--neon-pink)", symbol: "♦", pattern: "linear-gradient(135deg, rgba(0,0,0,0.1) 25%, transparent 25%, transparent 50%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1) 75%, transparent 75%)" },
+      { name: "Cyan", value: "var(--neon-cyan)", symbol: "○", pattern: "repeating-radial-gradient(circle at 50% 50%, transparent 0, transparent 5px, rgba(0,0,0,0.1) 5px, rgba(0,0,0,0.1) 10px)" },
+      { name: "Lime", value: "var(--neon-lime)", symbol: "□", pattern: "linear-gradient(0deg, transparent 50%, rgba(0,0,0,0.1) 50%)" },
     ];
 
     const MESSAGES = {
@@ -1279,7 +1274,6 @@
     let revealedPositions = new Set(); // Posições já reveladas como dicas
     let highScore = 0;
     let gamesPlayed = 0;
-    let isSwapping = false; // Flag para evitar trocas durante animação
 
     // Carregar dados salvos
     function loadGame() {
@@ -1337,13 +1331,10 @@
     function resetProgress() {
       if (confirm('Tem certeza que deseja apagar todo o progresso?')) {
         localStorage.removeItem('sequenceBreaker');
-        // Marca que foi feito um reset para não carregar dados antigos
-        localStorage.setItem('sequenceBreaker_reset', Date.now().toString());
         level = 1;
         score = 0;
         maxCombo = 0;
         gamesPlayed = 0;
-        highScore = 0;
         startLevel();
         alert('Progresso resetado com sucesso!');
       }
@@ -1525,15 +1516,9 @@
       hintsUsed = 0;
       revealedPositions.clear();
       
-      // Carregar progresso salvo apenas se não houver reset recente
-      const resetTimestamp = localStorage.getItem('sequenceBreaker_reset');
-      const hasRecentReset = resetTimestamp && (Date.now() - parseInt(resetTimestamp)) < 5000; // 5 segundos
-      
-      if (level === 1 && score === 0 && !hasRecentReset) {
+      // Carregar progresso salvo (exceto se for nível 1 e score 0)
+      if (level === 1 && score === 0) {
         loadGame();
-      } else if (hasRecentReset) {
-        // Remove a flag de reset após usar
-        localStorage.removeItem('sequenceBreaker_reset');
       }
       
       // Atualiza vidas com o cálculo matemático
@@ -1636,8 +1621,7 @@
         
         const slot = document.createElement("div");
         slot.className = "slot";
-        slot.style.setProperty('background-color', color.value);
-        slot.style.setProperty('background-image', color.pattern);
+        slot.style.background = `${color.value}, ${color.pattern}`;
         slot.dataset.index = index;
         slot.dataset.color = color.name.toLowerCase();
         
@@ -1680,7 +1664,7 @@
     }
 
     function selectSlot(index, wrapper) {
-      if (!gameActive || selected.length === 2 || isSwapping) return;
+      if (!gameActive || selected.length === 2) return;
       if (selected.find(s => s.index === index)) return;
 
       const slot = wrapper.querySelector('.slot');
@@ -1703,9 +1687,6 @@
     }
 
     function swapSelected() {
-      if (isSwapping) return;
-      isSwapping = true;
-      
       const [a, b] = selected;
       const wrapperA = a.wrapper;
       const wrapperB = b.wrapper;
@@ -1757,17 +1738,12 @@
         // Remover destaque dos conectores
         document.querySelectorAll('.connector.active').forEach(c => c.classList.remove('active'));
         
-        // Limpa revealedPositions para posições que foram trocadas
-        revealedPositions.delete(a.index);
-        revealedPositions.delete(b.index);
-        
         selected = [];
-        isSwapping = false;
         renderBoard();
       }, 500);
     }
 
-    // Usar uma dica - revela visualmente uma posição correta (mas não resolve automaticamente)
+    // Usar uma dica - revela uma posição correta
     function useHint() {
       const { hints } = levelConfig();
       if (hintsUsed >= hints) {
@@ -1792,132 +1768,48 @@
       
       // Escolhe uma posição aleatória para revelar
       const posToReveal = availablePositions[Math.floor(Math.random() * availablePositions.length)];
-      const correctColor = secret[posToReveal];
+      const correctColorIndex = boardState.findIndex(c => c.name === secret[posToReveal].name);
       
-      // Encontra onde está a cor correta atualmente
-      const currentColorIndex = boardState.findIndex(c => c.name === correctColor.name);
-      
-      // Apenas mostra visualmente a dica - NÃO faz a troca automaticamente
-      revealedPositions.add(posToReveal);
-      hintsUsed++;
-      
-      // Atualiza display de dicas
-      const { hints } = levelConfig();
-      hintsDisplay.textContent = hints - hintsUsed;
-      
-      // Feedback visual - destaca a posição que precisa da cor correta
-      const slots = document.querySelectorAll(".slot-wrapper .slot");
-      const targetSlot = slots[posToReveal];
-      const sourceSlot = slots[currentColorIndex];
-      
-      // Destaca a posição alvo com amarelo (indica onde a cor deve ir)
-      targetSlot.classList.add("hint-target");
-      targetSlot.style.boxShadow = "0 0 30px rgba(255, 255, 0, 0.8), 0 0 60px rgba(255, 255, 0, 0.4)";
-      targetSlot.style.animation = "pulse-hint 1s ease-in-out infinite alternate";
-      
-      // Destaca a posição onde a cor correta está atualmente
-      sourceSlot.style.boxShadow = "0 0 30px rgba(0, 255, 136, 0.8), 0 0 60px rgba(0, 255, 136, 0.4)";
-      sourceSlot.style.animation = "pulse-hint 1s ease-in-out infinite alternate";
-      
-      // Cria seta indicando a troca sugerida
-      showHintArrow(posToReveal, currentColorIndex);
-      
-      // Destacar conectores
-      const connector1 = document.getElementById(`connector-${posToReveal}`);
-      const connector2 = document.getElementById(`connector-${currentColorIndex}`);
-      if (connector1) {
-        connector1.style.background = "rgba(255, 255, 0, 0.8)";
-        connector1.style.opacity = "1";
-      }
-      if (connector2) {
-        connector2.style.background = "rgba(0, 255, 136, 0.8)";
-        connector2.style.opacity = "1";
-      }
-      
-      showMessage("good");
-      msgEl.textContent = `💡 Dica: A cor ${correctColor.symbol} deve ir na posição ${posToReveal + 1}! ${hints - hintsUsed} restantes`;
-      
-      // Remove o destaque visual após 3 segundos
-      setTimeout(() => {
-        targetSlot.style.boxShadow = "";
-        targetSlot.style.animation = "";
-        targetSlot.classList.remove("hint-target");
-        sourceSlot.style.boxShadow = "";
-        sourceSlot.style.animation = "";
-        if (connector1) {
-          connector1.style.background = "";
-          connector1.style.opacity = "";
+      // Faz a troca automaticamente
+      if (correctColorIndex !== -1) {
+        [boardState[posToReveal], boardState[correctColorIndex]] = 
+          [boardState[correctColorIndex], boardState[posToReveal]];
+        
+        revealedPositions.add(posToReveal);
+        hintsUsed++;
+        
+        // Atualiza display de dicas
+        const { hints } = levelConfig();
+        hintsDisplay.textContent = hints - hintsUsed;
+        
+        // Feedback visual
+        renderBoard();
+        const slots = document.querySelectorAll(".slot-wrapper .slot");
+        slots[posToReveal].classList.add("correct");
+        slots[posToReveal].style.boxShadow = "0 0 30px rgba(255, 255, 0, 0.8)";
+        
+        // Destacar conector
+        const connector = document.getElementById(`connector-${posToReveal}`);
+        if (connector) {
+          connector.style.background = "rgba(255, 255, 0, 0.8)";
+          connector.style.opacity = "1";
         }
-        if (connector2) {
-          connector2.style.background = "";
-          connector2.style.opacity = "";
-        }
-        removeHintArrow();
-      }, 3000);
-    }
-    
-    // Mostra uma seta indicando a troca sugerida
-    function showHintArrow(targetIndex, sourceIndex) {
-      // Remove seta anterior se existir
-      removeHintArrow();
-      
-      const slots = document.querySelectorAll(".slot-wrapper");
-      const targetSlot = slots[targetIndex];
-      const sourceSlot = slots[sourceIndex];
-      
-      const targetRect = targetSlot.getBoundingClientRect();
-      const sourceRect = sourceSlot.getBoundingClientRect();
-      
-      const arrow = document.createElement("div");
-      arrow.id = "hint-arrow";
-      arrow.style.cssText = `
-        position: fixed;
-        width: 60px;
-        height: 4px;
-        background: linear-gradient(90deg, #00ff88, #ffff00);
-        z-index: 1000;
-        pointer-events: none;
-        box-shadow: 0 0 10px rgba(255, 255, 0, 0.8);
-      `;
-      
-      // Calcula posição e ângulo da seta
-      const targetX = targetRect.left + targetRect.width / 2;
-      const targetY = targetRect.top + targetRect.height / 2;
-      const sourceX = sourceRect.left + sourceRect.width / 2;
-      const sourceY = sourceRect.top + sourceRect.height / 2;
-      
-      const angle = Math.atan2(targetY - sourceY, targetX - sourceX);
-      const distance = Math.sqrt(Math.pow(targetX - sourceX, 2) + Math.pow(targetY - sourceY, 2));
-      
-      arrow.style.width = distance + "px";
-      arrow.style.left = sourceX + "px";
-      arrow.style.top = sourceY + "px";
-      arrow.style.transform = `rotate(${angle}rad)`;
-      arrow.style.transformOrigin = "0 50%";
-      
-      // Adiciona ponta da seta
-      const arrowHead = document.createElement("div");
-      arrowHead.style.cssText = `
-        position: absolute;
-        right: -10px;
-        top: -8px;
-        width: 0;
-        height: 0;
-        border-left: 20px solid #ffff00;
-        border-top: 10px solid transparent;
-        border-bottom: 10px solid transparent;
-        filter: drop-shadow(0 0 5px rgba(255, 255, 0, 0.8));
-      `;
-      arrow.appendChild(arrowHead);
-      
-      document.body.appendChild(arrow);
-    }
-    
-    // Remove a seta de dica
-    function removeHintArrow() {
-      const existingArrow = document.getElementById("hint-arrow");
-      if (existingArrow) {
-        existingArrow.remove();
+        
+        showMessage("good");
+        msgEl.textContent = `💡 Dica usada! ${hints - hintsUsed} restantes`;
+        
+        setTimeout(() => {
+          slots[posToReveal].style.boxShadow = "";
+          slots[posToReveal].classList.remove("correct");
+          if (connector) {
+            connector.style.background = "";
+            connector.style.opacity = "";
+          }
+        }, 2000);
+        
+        // Atualiza progresso
+        const hits = boardState.filter((c, i) => c.name === secret[i].name).length;
+        updateProgress(hits);
       }
     }
 
@@ -1983,7 +1875,6 @@
         // Atualizar high score se necessário
         if (score > highScore) {
           highScore = score;
-          document.getElementById("highScoreDisplay").textContent = highScore;
         }
         
         // Salvar progresso
