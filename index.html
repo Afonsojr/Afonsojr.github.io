@@ -1274,6 +1274,7 @@
     let revealedPositions = new Set(); // Posições já reveladas como dicas
     let highScore = 0;
     let gamesPlayed = 0;
+    let isSwapping = false; // Flag para evitar trocas durante animação
 
     // Carregar dados salvos
     function loadGame() {
@@ -1664,7 +1665,7 @@
     }
 
     function selectSlot(index, wrapper) {
-      if (!gameActive || selected.length === 2) return;
+      if (!gameActive || selected.length === 2 || isSwapping) return;
       if (selected.find(s => s.index === index)) return;
 
       const slot = wrapper.querySelector('.slot');
@@ -1687,6 +1688,9 @@
     }
 
     function swapSelected() {
+      if (isSwapping) return;
+      isSwapping = true;
+      
       const [a, b] = selected;
       const wrapperA = a.wrapper;
       const wrapperB = b.wrapper;
@@ -1739,11 +1743,12 @@
         document.querySelectorAll('.connector.active').forEach(c => c.classList.remove('active'));
         
         selected = [];
+        isSwapping = false;
         renderBoard();
       }, 500);
     }
 
-    // Usar uma dica - revela uma posição correta
+    // Usar uma dica - revela visualmente onde uma cor deve ir
     function useHint() {
       const { hints } = levelConfig();
       if (hintsUsed >= hints) {
@@ -1768,49 +1773,58 @@
       
       // Escolhe uma posição aleatória para revelar
       const posToReveal = availablePositions[Math.floor(Math.random() * availablePositions.length)];
-      const correctColorIndex = boardState.findIndex(c => c.name === secret[posToReveal].name);
+      const correctColor = secret[posToReveal];
+      const currentColorIndex = boardState.findIndex(c => c.name === correctColor.name);
       
-      // Faz a troca automaticamente
-      if (correctColorIndex !== -1) {
-        [boardState[posToReveal], boardState[correctColorIndex]] = 
-          [boardState[correctColorIndex], boardState[posToReveal]];
-        
-        revealedPositions.add(posToReveal);
-        hintsUsed++;
-        
-        // Atualiza display de dicas
-        const { hints } = levelConfig();
-        hintsDisplay.textContent = hints - hintsUsed;
-        
-        // Feedback visual
-        renderBoard();
-        const slots = document.querySelectorAll(".slot-wrapper .slot");
-        slots[posToReveal].classList.add("correct");
-        slots[posToReveal].style.boxShadow = "0 0 30px rgba(255, 255, 0, 0.8)";
-        
-        // Destacar conector
-        const connector = document.getElementById(`connector-${posToReveal}`);
-        if (connector) {
-          connector.style.background = "rgba(255, 255, 0, 0.8)";
-          connector.style.opacity = "1";
-        }
-        
-        showMessage("good");
-        msgEl.textContent = `💡 Dica usada! ${hints - hintsUsed} restantes`;
-        
-        setTimeout(() => {
-          slots[posToReveal].style.boxShadow = "";
-          slots[posToReveal].classList.remove("correct");
-          if (connector) {
-            connector.style.background = "";
-            connector.style.opacity = "";
-          }
-        }, 2000);
-        
-        // Atualiza progresso
-        const hits = boardState.filter((c, i) => c.name === secret[i].name).length;
-        updateProgress(hits);
+      // Registra que usou a dica (mas NÃO faz a troca automaticamente)
+      revealedPositions.add(posToReveal);
+      hintsUsed++;
+      
+      // Atualiza display de dicas
+      const { hints } = levelConfig();
+      hintsDisplay.textContent = hints - hintsUsed;
+      
+      // Feedback visual - destaca onde a cor correta deve ir
+      const slots = document.querySelectorAll(".slot-wrapper .slot");
+      const targetSlot = slots[posToReveal];
+      const sourceSlot = slots[currentColorIndex];
+      
+      // Destaca a posição alvo
+      targetSlot.classList.add("correct");
+      targetSlot.style.boxShadow = "0 0 30px rgba(255, 255, 0, 0.8), 0 0 60px rgba(255, 255, 0, 0.4)";
+      
+      // Destaca onde a cor está atualmente
+      sourceSlot.style.boxShadow = "0 0 30px rgba(0, 255, 136, 0.8), 0 0 60px rgba(0, 255, 136, 0.4)";
+      
+      // Destacar conectores
+      const connector1 = document.getElementById(`connector-${posToReveal}`);
+      const connector2 = document.getElementById(`connector-${currentColorIndex}`);
+      if (connector1) {
+        connector1.style.background = "rgba(255, 255, 0, 0.8)";
+        connector1.style.opacity = "1";
       }
+      if (connector2) {
+        connector2.style.background = "rgba(0, 255, 136, 0.8)";
+        connector2.style.opacity = "1";
+      }
+      
+      showMessage("good");
+      msgEl.textContent = `💡 Dica: A cor ${correctColor.symbol} deve ir na posição ${posToReveal + 1}! ${hints - hintsUsed} restantes`;
+      
+      // Remove o destaque visual após 3 segundos
+      setTimeout(() => {
+        targetSlot.style.boxShadow = "";
+        targetSlot.classList.remove("correct");
+        sourceSlot.style.boxShadow = "";
+        if (connector1) {
+          connector1.style.background = "";
+          connector1.style.opacity = "";
+        }
+        if (connector2) {
+          connector2.style.background = "";
+          connector2.style.opacity = "";
+        }
+      }, 3000);
     }
 
     function checkBoard() {
@@ -1875,6 +1889,7 @@
         // Atualizar high score se necessário
         if (score > highScore) {
           highScore = score;
+          document.getElementById("highScoreDisplay").textContent = highScore;
         }
         
         // Salvar progresso
