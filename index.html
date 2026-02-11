@@ -1636,7 +1636,8 @@
         
         const slot = document.createElement("div");
         slot.className = "slot";
-        slot.style.background = `${color.value}, ${color.pattern}`;
+        slot.style.backgroundColor = color.value;
+        slot.style.backgroundImage = color.pattern;
         slot.dataset.index = index;
         slot.dataset.color = color.name.toLowerCase();
         
