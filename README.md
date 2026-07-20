@@ -31,10 +31,10 @@ Cada cor possui um **símbolo único** para acessibilidade (daltônicos).
    - Atualiza a barra de progresso
    - Se errar: perde 1 vida
 
-2. **💡 Dica** - Revela automaticamente uma posição correta
+2. **💡 Dica** - Revela a posição correta de uma peça
    - Custa 1 dica (quantidade limitada)
-   - Faz a troca automaticamente
-   - Destaca a peça com brilho amarelo
+   - Destaca onde a peça deve ir (amarelo) e onde ela está (verde)
+   - A troca deve ser feita manualmente
 
 3. **↺ Reiniciar** - Reinicia o jogo do nível 1
    - Reseta score e combo

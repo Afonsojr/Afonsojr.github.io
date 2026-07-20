@@ -17,13 +17,13 @@
       --accent: #00d9ff;
       --accent-glow: rgba(0, 217, 255, 0.5);
       
-      --neon-blue: #00d9ff;
-      --neon-purple: #b829dd;
-      --neon-amber: #ffaa00;
-      --neon-emerald: #00ff88;
-      --neon-crimson: #ff3366;
-      --neon-pink: #ff00aa;
-      --neon-cyan: #00ffff;
+      --neon-blue: #0044ff;
+      --neon-purple: #9933ff;
+      --neon-amber: #ff8800;
+      --neon-emerald: #00cc66;
+      --neon-crimson: #ee2222;
+      --neon-pink: #ff1493;
+      --neon-cyan: #00bbaa;
       --neon-lime: #aaff00;
       
       --danger: #ff3366;
@@ -367,6 +367,16 @@
       transition: all 0.5s ease;
     }
 
+    .connector.interior {
+      background: linear-gradient(90deg, var(--neon-amber), var(--neon-pink));
+      opacity: 0.2;
+      height: 2px;
+    }
+
+    .connector.interior.active {
+      opacity: 0.6;
+    }
+
     .connector.active {
       opacity: 0.8;
       box-shadow: 0 0 10px var(--accent-glow);
@@ -465,14 +475,14 @@
       transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.2s ease;
     }
 
-    .slot[data-color="blue"] { border-color: #0066CC; }
-    .slot[data-color="purple"] { border-color: #9933CC; }
-    .slot[data-color="amber"] { border-color: #CC9900; }
-    .slot[data-color="emerald"] { border-color: #00CC66; }
-    .slot[data-color="crimson"] { border-color: #CC0033; }
-    .slot[data-color="pink"] { border-color: #CC0066; }
-    .slot[data-color="cyan"] { border-color: #00CCCC; }
-    .slot[data-color="lime"] { border-color: #99CC00; }
+    .slot[data-color="blue"] { border-color: #0033CC; }
+    .slot[data-color="purple"] { border-color: #7722CC; }
+    .slot[data-color="amber"] { border-color: #CC7700; }
+    .slot[data-color="emerald"] { border-color: #00AA55; }
+    .slot[data-color="crimson"] { border-color: #CC1111; }
+    .slot[data-color="pink"] { border-color: #CC1177; }
+    .slot[data-color="cyan"] { border-color: #009988; }
+    .slot[data-color="lime"] { border-color: #88CC00; }
 
     .slot.selected {
       border-color: #fff !important;
@@ -1105,12 +1115,13 @@
         <div class="progress-bar">
           <div class="progress-fill" id="progressFill" style="width: 0%"></div>
         </div>
+        <div style="margin-top:6px;font-size:0.75rem;color:var(--muted);text-align:center;" id="shapeProgress">🔺 Triângulo — 0/3 vitórias → ■ Quadrado</div>
       </div>
 
       <!-- Status Grid -->
       <div class="status-grid">
         <div class="stat-card">
-          <div class="stat-label">Nível</div>
+          <div class="stat-label">Nível · <span id="shapeLabel">🔺 Triângulo</span></div>
           <div class="stat-value" id="level">1</div>
         </div>
         <div class="stat-card">
@@ -1216,9 +1227,9 @@
       { name: "Amber", value: "var(--neon-amber)", symbol: "▲", pattern: "linear-gradient(45deg, transparent 40%, rgba(0,0,0,0.2) 40%, rgba(0,0,0,0.2) 60%, transparent 60%)" },
       { name: "Emerald", value: "var(--neon-emerald)", symbol: "■", pattern: "repeating-linear-gradient(90deg, transparent, transparent 10px, rgba(0,0,0,0.1) 10px, rgba(0,0,0,0.1) 20px)" },
       { name: "Crimson", value: "var(--neon-crimson)", symbol: "★", pattern: "radial-gradient(circle at 70% 70%, rgba(255,255,255,0.1) 0%, transparent 40%)" },
-      { name: "Pink", value: "var(--neon-pink)", symbol: "♦", pattern: "linear-gradient(135deg, rgba(0,0,0,0.1) 25%, transparent 25%, transparent 50%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1) 75%, transparent 75%)" },
-      { name: "Cyan", value: "var(--neon-cyan)", symbol: "○", pattern: "repeating-radial-gradient(circle at 50% 50%, transparent 0, transparent 5px, rgba(0,0,0,0.1) 5px, rgba(0,0,0,0.1) 10px)" },
-      { name: "Lime", value: "var(--neon-lime)", symbol: "□", pattern: "linear-gradient(0deg, transparent 50%, rgba(0,0,0,0.1) 50%)" },
+      { name: "Pink", value: "var(--neon-pink)", symbol: "♥", pattern: "linear-gradient(135deg, rgba(0,0,0,0.1) 25%, transparent 25%, transparent 50%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1) 75%, transparent 75%)" },
+      { name: "Cyan", value: "var(--neon-cyan)", symbol: "✚", pattern: "repeating-radial-gradient(circle at 50% 50%, transparent 0, transparent 5px, rgba(0,0,0,0.1) 5px, rgba(0,0,0,0.1) 10px)" },
+      { name: "Lime", value: "var(--neon-lime)", symbol: "⬢", pattern: "linear-gradient(0deg, transparent 50%, rgba(0,0,0,0.1) 50%)" },
     ];
 
     const MESSAGES = {
@@ -1275,6 +1286,9 @@
     let highScore = 0;
     let gamesPlayed = 0;
     let isSwapping = false; // Flag para evitar trocas durante animação
+    let shapeIndex = 0;     // 0=triângulo, 1=quadrado, 2=pentágono...
+    let shapeWins = 0;      // vitórias acumuladas na forma atual
+    const SHAPE_NAMES = ['🔺 Triângulo', '■ Quadrado', '⬟ Pentágono', '⬡ Hexágono', '🔷 Heptágono', '🔶 Octógono'];
 
     // Carregar dados salvos
     function loadGame() {
@@ -1286,6 +1300,8 @@
         maxCombo = data.maxCombo || 0;
         highScore = data.highScore || 0;
         gamesPlayed = data.gamesPlayed || 0;
+        shapeIndex = data.shapeIndex || 0;
+        shapeWins = data.shapeWins || 0;
         console.log('Jogo carregado:', data);
       }
     }
@@ -1298,6 +1314,8 @@
         maxCombo,
         highScore: Math.max(highScore, score),
         gamesPlayed,
+        shapeIndex,
+        shapeWins,
         lastPlayed: new Date().toISOString()
       };
       localStorage.setItem('sequenceBreaker', JSON.stringify(data));
@@ -1336,6 +1354,8 @@
         score = 0;
         maxCombo = 0;
         gamesPlayed = 0;
+        shapeIndex = 0;
+        shapeWins = 0;
         startLevel();
         alert('Progresso resetado com sucesso!');
       }
@@ -1392,16 +1412,7 @@
     }
 
     function levelConfig() {
-      // Progressão suave: começa com 3 slots, aumenta gradualmente
-      // Níveis 1-2: 3 slots (6 permutações)
-      // Níveis 3-5: 4 slots (24 permutações)
-      // Níveis 6-9: 5 slots (120 permutações)
-      // Níveis 10+: 6-8 slots
-      let size;
-      if (level <= 2) size = 3;
-      else if (level <= 5) size = 4;
-      else if (level <= 9) size = 5;
-      else size = Math.min(3 + Math.floor((level - 1) / 3), 8);
+      const size = shapeIndex + 3;
       
       // Calcula vidas baseado nas permutações possíveis
       const calculatedLives = calculateLives(size);
@@ -1510,17 +1521,17 @@
     document.head.appendChild(style);
 
     function startLevel() {
-      const { size, lives: calculatedLives, hints } = levelConfig();
-      gameActive = true;
-      attempts = [];
-      logRound = 1;
-      hintsUsed = 0;
-      revealedPositions.clear();
-      
       // Carregar progresso salvo (exceto se for nível 1 e score 0)
       if (level === 1 && score === 0) {
         loadGame();
       }
+      
+      const { size, lives: calculatedLives, hints } = levelConfig();
+      gameActive = false;
+      attempts = [];
+      logRound = 1;
+      hintsUsed = 0;
+      revealedPositions.clear();
       
       // Atualiza vidas com o cálculo matemático
       lives = calculatedLives;
@@ -1532,7 +1543,13 @@
       comboEl.textContent = "x" + (combo + 1);
       logEl.innerHTML = "";
       updateProgress(0);
-      showMessage("start");
+      
+      // Atualizar display da forma
+      const shapeName = SHAPE_NAMES[shapeIndex] || `${shapeIndex + 3} Lados`;
+      const nextShape = SHAPE_NAMES[shapeIndex + 1] || `${shapeIndex + 4} Lados`;
+      const winsNeeded = shapeIndex + 3;
+      document.getElementById("shapeLabel").textContent = shapeName;
+      document.getElementById("shapeProgress").textContent = `${shapeName} — ${shapeWins}/${winsNeeded} vitórias → ${nextShape}`;
       
       // Atualizar display de estatísticas
       document.getElementById("highScoreDisplay").textContent = highScore;
@@ -1559,23 +1576,30 @@
       statChance.textContent = chance + "%";
 
       secret = shuffle(COLORS).slice(0, size);
-      
-      // Embaralha o board mas garante que não é a solução
-      do {
-        boardState = shuffle(secret);
-      } while (boardState.every((c, i) => c.name === secret[i].name));
-      
+      boardState = [...secret];
       selected = [];
-
       renderBoard();
-      
-      // Mostrar informação sobre dicas disponíveis
-      if (hints > 0) {
-        setTimeout(() => {
-          showMessage("good");
-          msgEl.textContent = `💡 Você tem ${hints} dicas disponíveis!`;
-        }, 2000);
-      }
+      showMessage("good");
+      msgEl.textContent = `👀 Memorize a sequência! (${size} cores)`;
+
+      setTimeout(() => {
+        do {
+          boardState = shuffle(secret);
+        } while (boardState.every((c, i) => c.name === secret[i].name));
+
+        selected = [];
+        gameActive = true;
+        renderBoard();
+        updateProgress(0);
+        showMessage("start");
+
+        if (hints > 0) {
+          setTimeout(() => {
+            showMessage("good");
+            msgEl.textContent = `💡 Você tem ${hints} dicas disponíveis!`;
+          }, 2000);
+        }
+      }, 2500);
     }
 
     function renderBoard() {
@@ -1595,23 +1619,59 @@
       // Criar conectores primeiro (para ficarem atrás dos blocos)
       for (let i = 0; i < numSlots; i++) {
         const nextIndex = (i + 1) % numSlots;
-        const connector = document.createElement("div");
-        connector.className = "connector";
-        connector.id = `connector-${i}`;
-        
         const pos1 = positions[i];
         const pos2 = positions[nextIndex];
-        const angle = Math.atan2(pos2.y - pos1.y, pos2.x - pos1.x);
-        const distance = Math.sqrt(Math.pow(pos2.x - pos1.x, 2) + Math.pow(pos2.y - pos1.y, 2));
         
-        connector.style.left = (pos1.x + 35) + "px"; // +35 é metade do tamanho do bloco
-        connector.style.top = (pos1.y + 35) + "px";
-        connector.style.width = distance + "px";
-        connector.style.transform = `rotate(${angle}rad)`;
-        
-        shapeContainer.appendChild(connector);
+        if (numSlots >= 4) {
+          const midX = (pos1.x + pos2.x) / 2;
+          const midY = (pos1.y + pos2.y) / 2;
+          
+          const c1 = document.createElement("div");
+          c1.className = "connector";
+          c1.id = `connector-${i}`;
+          const a1 = Math.atan2(midY - pos1.y, midX - pos1.x);
+          const d1 = Math.sqrt((midX - pos1.x) ** 2 + (midY - pos1.y) ** 2);
+          c1.style.cssText = `left:${pos1.x + 35}px;top:${pos1.y + 35}px;width:${d1}px;transform:rotate(${a1}rad)`;
+          shapeContainer.appendChild(c1);
+          
+          const c2 = document.createElement("div");
+          c2.className = "connector";
+          c2.id = `connector-${i}-mid`;
+          const a2 = Math.atan2(pos2.y - midY, pos2.x - midX);
+          const d2 = Math.sqrt((pos2.x - midX) ** 2 + (pos2.y - midY) ** 2);
+          c2.style.cssText = `left:${midX + 35}px;top:${midY + 35}px;width:${d2}px;transform:rotate(${a2}rad)`;
+          shapeContainer.appendChild(c2);
+        } else {
+          const connector = document.createElement("div");
+          connector.className = "connector";
+          connector.id = `connector-${i}`;
+          const angle = Math.atan2(pos2.y - pos1.y, pos2.x - pos1.x);
+          const distance = Math.sqrt((pos2.x - pos1.x) ** 2 + (pos2.y - pos1.y) ** 2);
+          connector.style.cssText = `left:${pos1.x + 35}px;top:${pos1.y + 35}px;width:${distance}px;transform:rotate(${angle}rad)`;
+          shapeContainer.appendChild(connector);
+        }
       }
       
+      // Conectores internos (diagonais) entre vértices não adjacentes
+      if (numSlots >= 4) {
+        for (let i = 0; i < numSlots; i++) {
+          for (let j = i + 2; j < numSlots; j++) {
+            if (i === 0 && j === numSlots - 1) continue;
+            const p1 = positions[i];
+            const p2 = positions[j];
+            const conn = document.createElement("div");
+            conn.className = "connector interior";
+            conn.id = `connector-int-${i}-${j}`;
+            conn.dataset.from = i;
+            conn.dataset.to = j;
+            const ang = Math.atan2(p2.y - p1.y, p2.x - p1.x);
+            const dist = Math.sqrt((p2.x - p1.x) ** 2 + (p2.y - p1.y) ** 2);
+            conn.style.cssText = `left:${p1.x + 35}px;top:${p1.y + 35}px;width:${dist}px;transform:rotate(${ang}rad)`;
+            shapeContainer.appendChild(conn);
+          }
+        }
+      }
+
       // Criar blocos nas posições calculadas
       boardState.forEach((color, index) => {
         const wrapper = document.createElement("div");
@@ -1622,7 +1682,7 @@
         
         const slot = document.createElement("div");
         slot.className = "slot";
-        slot.style.background = `${color.value}, ${color.pattern}`;
+        slot.style.background = color.value;
         slot.dataset.index = index;
         slot.dataset.color = color.name.toLowerCase();
         
@@ -1664,6 +1724,41 @@
       return positions;
     }
 
+    // Retorna waypoints em linha reta entre dois índices
+    function getWaypoints(numSlots, fromIndex, toIndex) {
+      const offsetAngle = -Math.PI / 2;
+      const radius = 120;
+      const centerX = 150;
+      const centerY = 150;
+
+      const angle1 = offsetAngle + (fromIndex * 2 * Math.PI / numSlots);
+      const angle2 = offsetAngle + (toIndex * 2 * Math.PI / numSlots);
+      const x1 = centerX + radius * Math.cos(angle1) - 35;
+      const y1 = centerY + radius * Math.sin(angle1) - 35;
+      const x2 = centerX + radius * Math.cos(angle2) - 35;
+      const y2 = centerY + radius * Math.sin(angle2) - 35;
+
+      return [
+        { x: 0, y: 0 },
+        { x: x2 - x1, y: y2 - y1 }
+      ];
+    }
+
+    // Constrói regra @keyframes para animação ao longo de waypoints
+    function buildSwapKeyframes(name, waypoints, finalRotation) {
+      const total = waypoints.length;
+      if (total < 2) return '';
+      let css = `@keyframes ${name} {`;
+      for (let i = 0; i < total; i++) {
+        const pct = Math.round((i / (total - 1)) * 100);
+        const sc = i === total - 1 ? '1.1' : '1.05';
+        const rot = i === total - 1 ? `${finalRotation}deg` : `${Math.round((i / (total - 1)) * finalRotation)}deg`;
+        css += `${pct}% { transform: translate(${waypoints[i].x}px, ${waypoints[i].y}px) scale(${sc}) rotate(${rot}); }`;
+      }
+      css += '}';
+      return css;
+    }
+
     function selectSlot(index, wrapper) {
       if (!gameActive || selected.length === 2 || isSwapping) return;
       if (selected.find(s => s.index === index)) return;
@@ -1673,9 +1768,13 @@
       slot.classList.add("selected");
       wrapper.style.zIndex = "10";
       
-      // Destacar conector
-      const connector = document.getElementById(`connector-${index}`);
-      if (connector) connector.classList.add("active");
+      // Destacar conectores (perímetro e internos)
+      const conn = document.getElementById(`connector-${index}`);
+      if (conn) conn.classList.add("active");
+      const connMid = document.getElementById(`connector-${index}-mid`);
+      if (connMid) connMid.classList.add("active");
+      document.querySelectorAll(`.connector.interior[data-from="${index}"], .connector.interior[data-to="${index}"]`)
+        .forEach(c => c.classList.add("active"));
       
       if (selected.length === 1) {
         showMessage("first");
@@ -1697,28 +1796,28 @@
       const slotA = a.slot;
       const slotB = b.slot;
 
-      // Pegar posições atuais dos wrappers
-      const posA = {
-        x: parseFloat(wrapperA.style.left),
-        y: parseFloat(wrapperA.style.top)
-      };
-      const posB = {
-        x: parseFloat(wrapperB.style.left),
-        y: parseFloat(wrapperB.style.top)
-      };
-
-      const deltaX = posB.x - posA.x;
-      const deltaY = posB.y - posA.y;
-
       slotA.classList.add("animating");
       slotB.classList.add("animating");
 
-      // Animação de troca usando transform
-      slotA.style.transition = "transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)";
-      slotB.style.transition = "transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)";
+      // Animar ao longo do perímetro (peças percorrem as bordas da forma)
+      const waypointsA = getWaypoints(boardState.length, a.index, b.index);
+      const waypointsB = getWaypoints(boardState.length, b.index, a.index);
 
-      slotA.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(1.1) rotate(360deg)`;
-      slotB.style.transform = `translate(${-deltaX}px, ${-deltaY}px) scale(1.1) rotate(-360deg)`;
+      // Injeta keyframes dinâmicos
+      const styleId = 'swap-perimeter-keyframes';
+      let styleEl = document.getElementById(styleId);
+      if (!styleEl) {
+        styleEl = document.createElement('style');
+        styleEl.id = styleId;
+        document.head.appendChild(styleEl);
+      }
+
+      const kfA = 'swap-a-' + Date.now();
+      const kfB = 'swap-b-' + Date.now();
+      styleEl.textContent = buildSwapKeyframes(kfA, waypointsA, 360) + buildSwapKeyframes(kfB, waypointsB, -360);
+
+      slotA.style.animation = `${kfA} 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards`;
+      slotB.style.animation = `${kfB} 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards`;
 
       // Criar partículas nos slots
       const rectA = slotA.getBoundingClientRect();
@@ -1734,8 +1833,8 @@
         // Resetar estilos
         selected.forEach(s => {
           s.slot.classList.remove("selected", "animating");
+          s.slot.style.animation = "";
           s.slot.style.transform = "";
-          s.slot.style.transition = "";
           s.wrapper.style.zIndex = "";
         });
         
@@ -1745,7 +1844,40 @@
         selected = [];
         isSwapping = false;
         renderBoard();
+        checkAutoComplete();
       }, 500);
+    }
+
+    function checkAutoComplete() {
+      const allCorrect = boardState.every((c, i) => c.name === secret[i].name);
+      if (allCorrect) {
+        gameActive = false;
+        attempts.push(secret.length);
+        combo++;
+        if (combo > maxCombo) maxCombo = combo;
+        const { size } = levelConfig();
+        const basePoints = size * 100;
+        const comboBonus = combo * 50;
+        const perfectBonus = attempts.length === 1 ? 500 : 0;
+        const difficultyBonus = (secret.length - 3) * 50;
+        const hintBonus = (getHints(level, secret.length) - hintsUsed) * 100;
+        const roundPoints = basePoints + comboBonus + perfectBonus + difficultyBonus + hintBonus;
+        score += roundPoints;
+        scoreEl.textContent = score;
+        comboEl.textContent = "x" + (combo + 1);
+        comboEl.classList.add("combo");
+        setTimeout(() => comboEl.classList.remove("combo"), 500);
+        showMessage("excellent");
+        if (score > highScore) {
+          highScore = score;
+          document.getElementById("highScoreDisplay").textContent = highScore;
+        }
+        saveGame();
+        setTimeout(() => {
+          updatePerformanceStars();
+          showVictory();
+        }, 800);
+      }
     }
 
     // Usar uma dica - revela visualmente onde uma cor deve ir
@@ -1781,7 +1913,6 @@
       hintsUsed++;
       
       // Atualiza display de dicas
-      const { hints } = levelConfig();
       hintsDisplay.textContent = hints - hintsUsed;
       
       // Feedback visual - destaca onde a cor correta deve ir
@@ -1797,16 +1928,20 @@
       sourceSlot.style.boxShadow = "0 0 30px rgba(0, 255, 136, 0.8), 0 0 60px rgba(0, 255, 136, 0.4)";
       
       // Destacar conectores
-      const connector1 = document.getElementById(`connector-${posToReveal}`);
-      const connector2 = document.getElementById(`connector-${currentColorIndex}`);
-      if (connector1) {
-        connector1.style.background = "rgba(255, 255, 0, 0.8)";
-        connector1.style.opacity = "1";
-      }
-      if (connector2) {
-        connector2.style.background = "rgba(0, 255, 136, 0.8)";
-        connector2.style.opacity = "1";
-      }
+      const hintConn1 = document.getElementById(`connector-${posToReveal}`);
+      const hintConn1m = document.getElementById(`connector-${posToReveal}-mid`);
+      const hintConn2 = document.getElementById(`connector-${currentColorIndex}`);
+      const hintConn2m = document.getElementById(`connector-${currentColorIndex}-mid`);
+      const hintStyle = { background: "rgba(255, 255, 0, 0.8)", opacity: "1" };
+      const hintStyle2 = { background: "rgba(0, 255, 136, 0.8)", opacity: "1" };
+      if (hintConn1) Object.assign(hintConn1.style, hintStyle);
+      if (hintConn1m) Object.assign(hintConn1m.style, hintStyle);
+      if (hintConn2) Object.assign(hintConn2.style, hintStyle2);
+      if (hintConn2m) Object.assign(hintConn2m.style, hintStyle2);
+      document.querySelectorAll(`.connector.interior[data-from="${posToReveal}"], .connector.interior[data-to="${posToReveal}"]`)
+        .forEach(c => Object.assign(c.style, hintStyle));
+      document.querySelectorAll(`.connector.interior[data-from="${currentColorIndex}"], .connector.interior[data-to="${currentColorIndex}"]`)
+        .forEach(c => Object.assign(c.style, hintStyle2));
       
       showMessage("good");
       msgEl.textContent = `💡 Dica: A cor ${correctColor.symbol} deve ir na posição ${posToReveal + 1}! ${hints - hintsUsed} restantes`;
@@ -1816,14 +1951,14 @@
         targetSlot.style.boxShadow = "";
         targetSlot.classList.remove("correct");
         sourceSlot.style.boxShadow = "";
-        if (connector1) {
-          connector1.style.background = "";
-          connector1.style.opacity = "";
-        }
-        if (connector2) {
-          connector2.style.background = "";
-          connector2.style.opacity = "";
-        }
+        if (hintConn1) { hintConn1.style.background = ""; hintConn1.style.opacity = ""; }
+        if (hintConn1m) { hintConn1m.style.background = ""; hintConn1m.style.opacity = ""; }
+        if (hintConn2) { hintConn2.style.background = ""; hintConn2.style.opacity = ""; }
+        if (hintConn2m) { hintConn2m.style.background = ""; hintConn2m.style.opacity = ""; }
+        document.querySelectorAll(`.connector.interior[data-from="${posToReveal}"], .connector.interior[data-to="${posToReveal}"]`)
+          .forEach(c => { c.style.background = ""; c.style.opacity = ""; });
+        document.querySelectorAll(`.connector.interior[data-from="${currentColorIndex}"], .connector.interior[data-to="${currentColorIndex}"]`)
+          .forEach(c => { c.style.background = ""; c.style.opacity = ""; });
       }, 3000);
     }
 
@@ -1840,13 +1975,13 @@
         if (color.name === secret[i].name) {
           hits++;
           slots[i].classList.add("correct");
-          // Destacar conector também
-          const connector = document.getElementById(`connector-${i}`);
-          if (connector) {
-            connector.style.background = "var(--success)";
-            connector.style.opacity = "1";
-            connector.style.boxShadow = "0 0 15px var(--success)";
-          }
+          // Destacar conectores também
+          const c1 = document.getElementById(`connector-${i}`);
+          if (c1) { c1.style.background = "var(--success)"; c1.style.opacity = "1"; c1.style.boxShadow = "0 0 15px var(--success)"; }
+          const c1m = document.getElementById(`connector-${i}-mid`);
+          if (c1m) { c1m.style.background = "var(--success)"; c1m.style.opacity = "1"; c1m.style.boxShadow = "0 0 15px var(--success)"; }
+          document.querySelectorAll(`.connector.interior[data-from="${i}"], .connector.interior[data-to="${i}"]`)
+            .forEach(c => { c.style.background = "var(--success)"; c.style.opacity = "0.7"; });
           // Partículas nas peças corretas
           const rect = slots[i].getBoundingClientRect();
           createParticleEffect(rect.left + 35, rect.top + 35, color.value, 12);
@@ -1854,11 +1989,12 @@
           slots[i].classList.add("wrong");
           wrongPositions.push(i);
           // Conector em vermelho para errados
-          const connector = document.getElementById(`connector-${i}`);
-          if (connector) {
-            connector.style.background = "var(--danger)";
-            connector.style.opacity = "0.6";
-          }
+          const c2 = document.getElementById(`connector-${i}`);
+          if (c2) { c2.style.background = "var(--danger)"; c2.style.opacity = "0.6"; }
+          const c2m = document.getElementById(`connector-${i}-mid`);
+          if (c2m) { c2m.style.background = "var(--danger)"; c2m.style.opacity = "0.6"; }
+          document.querySelectorAll(`.connector.interior[data-from="${i}"], .connector.interior[data-to="${i}"]`)
+            .forEach(c => { c.style.background = "var(--danger)"; c.style.opacity = "0.4"; });
         }
       });
 
@@ -1958,7 +2094,7 @@
       document.getElementById("summaryScore").textContent = score;
       document.getElementById("summaryCombo").textContent = "x" + maxCombo;
       document.getElementById("summaryAccuracy").textContent = 
-        Math.round((attempts.filter(a => a === secret.length).length / attempts.length) * 100) || 100 + "%";
+        (Math.round((attempts.filter(a => a === secret.length).length / attempts.length) * 100) || 100) + "%";
       
       // Mostrar estrelas
       const victoryStars = document.getElementById("victoryStars").querySelectorAll(".star");
@@ -2078,12 +2214,42 @@
     function nextLevel() {
       document.getElementById("victoryOverlay").classList.remove("active");
       level++;
+      shapeWins++;
+      
+      const winsNeeded = shapeIndex + 3;
+      if (shapeWins >= winsNeeded) {
+        shapeIndex++;
+        shapeWins = 0;
+        saveGame();
+        showEvolution();
+        return;
+      }
+      
+      saveGame();
       startLevel();
+    }
+
+    function showEvolution() {
+      const shapeName = SHAPE_NAMES[shapeIndex] || `${shapeIndex + 3} Lados`;
+      const prevShapeName = SHAPE_NAMES[shapeIndex - 1] || `${shapeIndex + 2} Lados`;
+      
+      msgEl.textContent = `⬆ EVOLUÇÃO! ${prevShapeName} → ${shapeName}!`;
+      msgEl.className = "motivational-msg excellent";
+      msgEl.style.animation = "none";
+      setTimeout(() => { msgEl.style.animation = "msg-pop 0.5s ease"; }, 10);
+      
+      createConfetti();
+      
+      setTimeout(() => startLevel(), 2000);
     }
 
     function restartGame() {
       document.getElementById("gameoverOverlay").classList.remove("active");
       level = 1;
+      score = 0;
+      combo = 0;
+      shapeIndex = 0;
+      shapeWins = 0;
       startLevel();
     }
 
@@ -2107,6 +2273,10 @@
     document.getElementById("hintBtn").onclick = useHint;
     document.getElementById("resetBtn").onclick = () => {
       level = 1;
+      score = 0;
+      combo = 0;
+      shapeIndex = 0;
+      shapeWins = 0;
       startLevel();
     };
     document.getElementById("helpBtn").onclick = showRules;
