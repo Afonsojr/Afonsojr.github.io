@@ -355,6 +355,7 @@
       secret = shuffle(COLORS).slice(0, size);
       boardState = [...secret];
       selected = [];
+      boardEl.style.pointerEvents = "none";
       renderBoard();
       showMessage("good");
       msgEl.textContent = `👀 Memorize a sequência! (${size} cores)`;
@@ -366,6 +367,7 @@
 
         selected = [];
         gameActive = true;
+        boardEl.style.pointerEvents = "";
         renderBoard();
         updateProgress(0);
         showMessage("start");
