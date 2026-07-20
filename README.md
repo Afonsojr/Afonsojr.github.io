@@ -6,7 +6,7 @@
 
 ## Funcionamento
 
-O jogo gera uma **sequência secreta** de cores (3 a 8 peças dependendo do nível) que você precisa descobrir. As peças são distribuídas em formato geométrico (polígono regular) e começam embaralhadas.
+O jogo gera uma **sequência secreta** de cores que você precisa descobrir. As peças são distribuídas em formato geométrico (polígono regular) e começam embaralhadas.
 
 ### Cores disponíveis (8 total):
 - 🔷 Azul (◆)
@@ -73,11 +73,7 @@ Cada cor possui um **símbolo único** para acessibilidade (daltônicos).
 ### ❌ Game Over:
 - **Vidas chegam a 0**
 - Quando erra uma verificação, perde 1 vida
-- Quantidade de vidas calculada matematicamente baseada nas permutações possíveis:
-  - Nível 1-2 (3 cores): 3 vidas
-  - Nível 3-5 (4 cores): 4-5 vidas
-  - Nível 6-9 (5 cores): 6-7 vidas
-  - Nível 10+ (6-8 cores): Até 15 vidas
+- Quantidade de vidas calculada matematicamente baseada nas permutações possíveis da forma atual
 
 ### Sistema de Combo:
 - **Combo aumenta** quando acerta na sequência completa
@@ -86,14 +82,27 @@ Cada cor possui um **símbolo único** para acessibilidade (daltônicos).
 
 ---
 
-## Progressão de Níveis
+## Progressão de Formas
 
-| Níveis | Cores | Permutações | Vidas |
-|--------|-------|-------------|-------|
-| 1-2 | 3 | 6 | 3 |
-| 3-5 | 4 | 24 | 4-5 |
-| 6-9 | 5 | 120 | 6-7 |
-| 10+ | 6-8 | 720+ | 8-15 |
+O jogo evolui por **formas geométricas**. Cada forma requer um número de vitórias igual ao seu número de lados para evoluir para a próxima.
+
+| Forma | Cores | Vitórias p/ evoluir | Permutações |
+|-------|-------|---------------------|-------------|
+| 🔺 Triângulo | 3 | 3 | 6 |
+| ■ Quadrado | 4 | 4 | 24 |
+| ⬟ Pentágono | 5 | 5 | 120 |
+| ⬡ Hexágono | 6 | 6 | 720 |
+| 🔷 Heptágono | 7 | 7 | 5040 |
+| 🔶 Octógono | 8 | 8 | 40320 |
+
+### Conectores:
+- **Perímetro:** Linhas entre vértices adjacentes com ponto médio visível (formas 4+)
+- **Diagonais:** Linhas internas conectando vértices não adjacentes (formas 4+)
+- Na verificação, conectores ficam verdes (correto) ou vermelhos (errado)
+
+### Animação de Troca:
+- Peças se movem em linha reta entre as posições (pelo interior em vértices não adjacentes)
+- Efeitos de partículas e rotação durante a troca
 
 ### Dicas Disponíveis:
 - Ganha 1 dica a cada 3 níveis
@@ -111,11 +120,14 @@ Cada cor possui um **símbolo único** para acessibilidade (daltônicos).
 - Data do último jogo
 
 ### 🎮 Interface:
+- **Forma atual:** Exibida no stat de Nível (🔺 Triângulo, ■ Quadrado, etc.)
+- **Progresso de evolução:** Mostra "N/N vitórias → Próxima Forma"
 - **Barra de progresso:** Mostra % de peças corretas
 - **Histórico:** Registra todas as tentativas
 - **Performance:** Estrelas em tempo real
 - **Partículas:** Efeitos visuais ao trocar peças
-- **Conectores:** Linhas entre peças que mudam de cor (verde=correto, vermelho=errado)
+- **Conectores de perímetro:** Linhas entre vértices adjacentes (com ponto médio em formas 4+)
+- **Conectores diagonais:** Linhas internas entre vértices não adjacentes (formas 4+)
 
 ### 💾 Salvamento Automático:
 - Salva progresso ao completar nível
