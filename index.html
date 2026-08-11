@@ -1,253 +1,449 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <title>Color Logic: Sequence Breaker</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <link rel="stylesheet" href="style.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
 </head>
-
 <body>
-  <!-- Partículas de Fundo -->
-  <div class="particles" id="particles"></div>
+<x-dc>
+<!-- DESIGN CONTRACT (O Brand Book de Ateliê — ver DESIGN.md)
+THESIS: a página prova o método mostrando o próprio material — a tabela de receitas e as
+páginas internas reais — em vez de alegar resultado com depoimento. Recusa a landing de
+infoproduto que empilha prova social fabricada.
+OWN-WORLD: dois fundos (ivory #F2ECE0 / preto de ateliê #121110), acento dourado único
+como linha e moldura, serifada bold caixa-alta nos títulos, script dourado só na voz da
+autora, cantos retos, sem sombra difusa.
+STORY: a visitante vê a fórmula pronta que ela usaria amanhã na cadeira, reconhece que é
+material de ateliê e não curso genérico, e garante o ebook por R$ 9,99.
+FIRST VIEWPORT: painel preto sobre mat ivory; título serifado à esquerda, capa real do
+ebook à direita, CTA e garantias logo abaixo do título.
+FORM: extraído do brand book real (uploads/O Codigo da Tonalizacao.pdf), não sorteado.
+FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md.
+-->
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Alex+Brush&family=Jost:wght@400;500;600&display=swap">
+  <style>
+    :root {
+      --color-ink: #121110;
+      --color-ivory: #F2ECE0;
+      --color-ivory-paper: #FAF7F0;
+      --color-gold: #C9A24B;
+      --color-gold-deep: #7D6225;
+      --color-cream: #F4EEE1;
+      --color-charcoal: #1C1A17;
 
-  <!-- Overlays -->
-  <div class="overlay" id="victoryOverlay">
-    <div class="victory-text">NÍVEL COMPLETADO!</div>
-    <div class="victory-subtitle">Você é incrível!</div>
-    <div class="stars-container" id="victoryStars">
-      <span class="star">⭐</span>
-      <span class="star">⭐</span>
-      <span class="star">⭐</span>
-    </div>
-    <div class="stats-summary">
-      <div class="summary-item">
-        <div class="summary-value" id="summaryScore">0</div>
-        <div class="summary-label">Pontuação</div>
-      </div>
-      <div class="summary-item">
-        <div class="summary-value" id="summaryCombo">0</div>
-        <div class="summary-label">Combo Máx</div>
-      </div>
-      <div class="summary-item">
-        <div class="summary-value" id="summaryAccuracy">0%</div>
-        <div class="summary-label">Precisão</div>
-      </div>
-    </div>
-    <button onclick="nextLevel()">Próximo Nível →</button>
-  </div>
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-script: 'Alex Brush', cursive;
+      --font-body: 'Jost', system-ui, sans-serif;
 
-  <div class="overlay" id="gameoverOverlay">
-    <div class="gameover-text">FIM DE JOGO</div>
-    <div class="solution-container">
-      <div class="solution-label">Sequência Correta</div>
-      <div class="solution-board" id="solutionBoard"></div>
-    </div>
-    <button onclick="restartGame()">Tentar Novamente ↺</button>
-  </div>
+      --sp-1: 6px;
+      --sp-2: 10px;
+      --sp-3: 16px;
+      --sp-4: 24px;
+      --sp-6: 40px;
+      --sp-8: 64px;
+    }
 
-  <!-- Rules Modal -->
-  <div class="overlay" id="rulesOverlay">
-    <div class="rules-container">
-      <div class="rules-header">
-        <h2 class="rules-title">📖 COMO JOGAR</h2>
-        <button class="close-btn" onclick="hideRules()">✕</button>
-      </div>
-      
-      <div class="rules-content">
-        <div class="rule-item">
-          <div class="rule-icon">🎯</div>
-          <div class="rule-text">
-            <strong>Objetivo:</strong> Organize as peças coloridas na sequência correta.
-          </div>
-        </div>
-        
-        <div class="rule-item">
-          <div class="rule-icon">👆</div>
-          <div class="rule-text">
-            <strong>Como jogar:</strong> Clique em duas peças para trocá-las de posição.
-          </div>
-        </div>
-        
-        <div class="rule-item">
-          <div class="rule-icon">✓</div>
-          <div class="rule-text">
-            <strong>Verificar:</strong> Clique no botão "Verificar" para confirmar sua resposta.
-          </div>
-        </div>
-        
-        <div class="rule-item">
-          <div class="rule-icon">❤️</div>
-          <div class="rule-text">
-            <strong>Vidas:</strong> Cada erro remove uma vida. Perdeu todas? Game over!
-          </div>
-        </div>
-        
-        <div class="rule-item">
-          <div class="rule-icon">💡</div>
-          <div class="rule-text">
-            <strong>Dicas:</strong> Pressione 'D' ou clique em "Dica" para revelar uma posição correta.
-          </div>
-        </div>
-        
-        <div class="rule-item">
-          <div class="rule-icon">⭐</div>
-          <div class="rule-text">
-            <strong>Estrelas:</strong> Complete sem erros para ganhar 3 estrelas!
-          </div>
-        </div>
-        
-        <div class="rule-item">
-          <div class="rule-icon">🔥</div>
-          <div class="rule-text">
-            <strong>Combo:</strong> Acertos consecutivos aumentam seu multiplicador de pontos.
-          </div>
-        </div>
-        
-        <div class="rule-item">
-          <div class="rule-icon">📊</div>
-          <div class="rule-text">
-            <strong>Dificuldade:</strong> A cada nível, mais cores e combinações são adicionadas.
-          </div>
-        </div>
-      </div>
-      
-      <div class="rules-footer">
-        <button onclick="hideRules()" class="rules-btn">Entendi! Vamos jogar 🚀</button>
-      </div>
-    </div>
-  </div>
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--color-ivory); font-family: var(--font-body); color: var(--color-charcoal); }
+    a { color: var(--color-gold-deep); text-decoration: none; }
+    p { line-height: 1.6; }
+    img { display: block; max-width: 100%; height: auto; }
+    .wrap { max-width: 1120px; margin: 0 auto; padding: 0 var(--sp-4); }
 
-  <!-- Game Interface -->
-  <div class="game">
-    <div class="main">
-      <div class="game-header">
-        <h1>Sequence Breaker</h1>
-        <div style="display: flex; gap: 12px; align-items: center;">
-          <button class="help-btn" id="helpBtn" title="Como Jogar">❓</button>
-          <div class="lives-container" id="livesContainer">
-            <span class="heart">❤️</span>
-            <span class="heart">❤️</span>
-            <span class="heart">❤️</span>
-          </div>
-        </div>
-      </div>
+    .display { font-family: var(--font-display); font-weight: 700; letter-spacing: 0.005em; line-height: 1.05; margin: 0; text-transform: uppercase; }
+    .script { font-family: var(--font-script); font-weight: 400; line-height: 1.3; color: var(--color-gold); }
+    .lede { font-size: 1.1rem; max-width: 52ch; }
+    .prose { max-width: 66ch; }
 
-      <!-- Barra de Progresso -->
-      <div class="progress-container">
-        <div class="progress-header">
-          <span>Progresso do Nível</span>
-          <span id="progressText">0%</span>
-        </div>
-        <div class="progress-bar">
-          <div class="progress-fill" id="progressFill" style="width: 0%"></div>
-        </div>
-        <div style="margin-top:6px;font-size:0.75rem;color:var(--muted);text-align:center;" id="shapeProgress">🔺 Triângulo — 0/3 vitórias → ■ Quadrado</div>
-      </div>
+    .panel-ink {
+      background: var(--color-ink);
+      color: var(--color-cream);
+      border: 1px solid var(--color-gold);
+    }
 
-      <!-- Status Grid -->
-      <div class="status-grid">
-        <div class="stat-card">
-          <div class="stat-label">Nível · <span id="shapeLabel">🔺 Triângulo</span></div>
-          <div class="stat-value" id="level">1</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Pontos</div>
-          <div class="stat-value" id="score">0</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Combo</div>
-          <div class="stat-value" id="combo">x1</div>
-        </div>
-      </div>
+    /* Moldura de material — as páginas reais do ebook entram emolduradas,
+       nunca sangradas, para lerem como artefato citado e não como fundo. */
+    .plate { border: 1px solid var(--color-gold); background: var(--color-ink); }
+    .plate img { width: 100%; }
+    .plate-cap {
+      font-size: 0.74rem; letter-spacing: 0.1em; text-transform: uppercase;
+      color: color-mix(in srgb, var(--color-charcoal) 65%, transparent);
+      margin-top: var(--sp-2);
+    }
+    .panel-ink .plate-cap { color: color-mix(in srgb, var(--color-cream) 70%, transparent); }
 
-      <!-- Mensagem Motivacional -->
-      <div class="motivational-msg" id="motivationalMsg">
-        Clique nas peças para organizar as cores! Pressione '?' para ver as regras
-      </div>
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      font-family: var(--font-body); font-weight: 600; font-size: 0.92rem;
+      letter-spacing: 0.03em; text-transform: uppercase;
+      padding: var(--sp-3) var(--sp-6); min-height: 44px;
+      border-radius: 2px; cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    }
+    .btn-gold { background: transparent; color: var(--color-gold); border: 1px solid var(--color-gold); }
+    .btn-gold:hover { background: var(--color-gold); color: var(--color-ink); }
+    .btn-gold-ivory { background: transparent; color: var(--color-gold-deep); border: 1px solid var(--color-gold-deep); }
+    .btn-gold-ivory:hover { background: var(--color-gold-deep); color: var(--color-ivory-paper); }
+    .btn-block { width: 100%; }
+    .btn:focus-visible { outline: 2px solid var(--color-gold-deep); outline-offset: 2px; }
+    .panel-ink .btn:focus-visible { outline-color: var(--color-gold); }
 
-      <!-- Board -->
-      <div class="board" id="board"></div>
+    .item { padding: var(--sp-4) 0; }
+    .item + .item { border-top: 1px solid color-mix(in srgb, var(--color-charcoal) 12%, transparent); }
+    .item-t { font-weight: 600; font-size: 1.1rem; margin-bottom: var(--sp-1); }
+    .item-d { color: color-mix(in srgb, var(--color-charcoal) 65%, transparent); max-width: 60ch; }
 
-      <!-- Controles -->
-      <div class="controls">
-        <button id="checkBtn">✓ Verificar</button>
-        <button id="hintBtn" class="secondary">💡 Dica</button>
-        <button id="resetBtn" class="secondary">↺ Reiniciar</button>
-      </div>
-    </div>
+    /* Dica da Ana Ritter — o mesmo dispositivo que aparece dentro do ebook. */
+    .dica {
+      background: var(--color-ink); border: 1px solid var(--color-gold);
+      padding: var(--sp-6); display: grid; grid-template-columns: 40px 1fr; gap: var(--sp-4);
+      align-items: start;
+    }
+    .dica-h {
+      font-size: 0.74rem; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--color-gold); font-weight: 600; margin-bottom: var(--sp-2);
+    }
+    .dica-b { color: color-mix(in srgb, var(--color-cream) 85%, transparent); line-height: 1.55; }
 
-    <div class="side-panel">
-      <!-- Performance -->
-      <div class="panel-section">
-        <h3 class="panel-title">🏆 Performance</h3>
-        <div class="stars-container" id="performanceStars">
-          <span class="star">⭐</span>
-          <span class="star">⭐</span>
-          <span class="star">⭐</span>
-        </div>
-        <div class="performance-text" id="performanceText">
-          Complete sem erros para ganhar 3 estrelas!
+    /* Selo sobre as colunas de fórmula da tabela de receitas. O borrão está
+       gravado no próprio JPEG (assets/pagina-receitas-preview.jpg), não aqui —
+       CSS não protegeria nada, o arquivo original seria acessível pela URL. */
+    .selo {
+      position: absolute; left: 50%; right: 1.4%; top: 13.5%; bottom: 4.8%;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: var(--sp-3); text-align: center; padding: var(--sp-4);
+      color: var(--color-gold); font-size: 0.9rem; line-height: 1.5; font-weight: 500;
+      letter-spacing: 0.02em;
+    }
+
+    /* Marca de item: o mesmo traço dourado que assina o resto do sistema,
+       desenhado, no lugar de um glifo de travessão. */
+    .inclui { display: flex; align-items: baseline; gap: var(--sp-3); line-height: 1.5; }
+    .inclui::before {
+      content: ""; flex: none; width: 14px; height: 1px;
+      background: var(--color-gold); transform: translateY(-0.35em);
+    }
+
+    .tag {
+      display: inline-flex; align-items: center; font-size: 0.72rem; letter-spacing: 0.1em;
+      text-transform: uppercase; font-weight: 600; padding: 6px 14px;
+      border: 1px solid var(--color-gold-deep); color: var(--color-gold-deep);
+    }
+    .tag.muted { border-color: color-mix(in srgb, var(--color-charcoal) 30%, transparent); color: color-mix(in srgb, var(--color-charcoal) 65%, transparent); }
+
+    /* Momento de motion único: as placas do material entram uma vez, escalonadas,
+       quando a seção de prova chega. Default é visível — sem JS, nada some; e só
+       recebe `pending` o que ainda está abaixo da dobra, então nada pisca. */
+    @media (prefers-reduced-motion: no-preference) {
+      .reveal.pending { opacity: 0; transform: translateY(18px); }
+      .reveal.pending.in {
+        opacity: 1; transform: none;
+        transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .reveal.pending:nth-child(2).in { transition-delay: 0.12s; }
+    }
+
+    @media (max-width: 860px) {
+      .grid-2, .grid-3, .grid-proof { grid-template-columns: 1fr !important; }
+      .display-hero { font-size: clamp(2.1rem, 8vw, 2.7rem) !important; }
+      .panel-ink, .dica { padding: var(--sp-6) !important; }
+    }
+  </style>
+</helmet>
+
+<div>
+
+  <nav class="wrap" style="padding:var(--sp-4) var(--sp-4); display:flex; align-items:center; justify-content:space-between; gap:var(--sp-3);">
+    <span class="display" style="font-size:1.05rem;">O Código da Tonalização</span>
+    <a href="#oferta" class="btn btn-gold-ivory" style="padding:var(--sp-2) var(--sp-4); font-size:0.78rem;">Quero o ebook</a>
+  </nav>
+
+  <main>
+
+  <!-- HERO -->
+  <header class="wrap" style="padding-bottom:var(--sp-8);">
+    <div class="panel-ink grid-2" style="padding:var(--sp-8); display:grid; grid-template-columns:1.1fr 0.9fr; gap:var(--sp-8); align-items:center;">
+      <div>
+        <h1 class="display display-hero" style="font-size:clamp(2.5rem,4.4vw,3.6rem); max-width:14ch;">
+          Pare de descobrir o tom depois que já aplicou.
+        </h1>
+        <p class="lede" style="color:color-mix(in srgb, var(--color-cream) 80%, transparent); margin:var(--sp-4) 0 var(--sp-6);">
+          O guia de colorimetria para lavatório da Ana Ritter: você aprende a ler o fundo de clareamento
+          do fio e sai com <strong style="color:var(--color-gold); font-weight:600;">8 receitas prontas</strong>,
+          já convertidas para Wella, L'Oréal e Keune.
+        </p>
+        <a href="#oferta" class="btn btn-gold" style="font-size:0.95rem;">Garantir meu ebook por R$ 9,99</a>
+        <div style="display:flex; gap:var(--sp-6); flex-wrap:wrap; margin-top:var(--sp-6);">
+          <span style="display:flex; align-items:center; gap:var(--sp-2); color:color-mix(in srgb, var(--color-cream) 65%, transparent); font-size:0.82rem;"><span style="width:5px;height:5px;background:var(--color-gold);flex:none;"></span>Acesso imediato em PDF</span>
+          <span style="display:flex; align-items:center; gap:var(--sp-2); color:color-mix(in srgb, var(--color-cream) 65%, transparent); font-size:0.82rem;"><span style="width:5px;height:5px;background:var(--color-gold);flex:none;"></span>Pagamento único</span>
+          <span style="display:flex; align-items:center; gap:var(--sp-2); color:color-mix(in srgb, var(--color-cream) 65%, transparent); font-size:0.82rem;"><span style="width:5px;height:5px;background:var(--color-gold);flex:none;"></span>Garantia de 7 dias</span>
         </div>
       </div>
-
-      <!-- Estatísticas do Nível -->
-      <div class="panel-section">
-        <h3 class="panel-title">📈 Estatísticas</h3>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.9rem;">
-          <div style="text-align: center; padding: 8px; background: rgba(255,255,255,0.03); border-radius: 8px;">
-            <div style="color: var(--muted); font-size: 0.75rem;">Combinações</div>
-            <div style="font-family: 'Orbitron', sans-serif; font-weight: 700; color: var(--accent);" id="statCombinations">6</div>
-          </div>
-          <div style="text-align: center; padding: 8px; background: rgba(255,255,255,0.03); border-radius: 8px;">
-            <div style="color: var(--muted); font-size: 0.75rem;">Vidas</div>
-            <div style="font-family: 'Orbitron', sans-serif; font-weight: 700; color: var(--success);" id="statLives">3</div>
-          </div>
-          <div style="text-align: center; padding: 8px; background: rgba(255,255,255,0.03); border-radius: 8px;">
-            <div style="color: var(--muted); font-size: 0.75rem;">Dicas</div>
-            <div style="font-family: 'Orbitron', sans-serif; font-weight: 700; color: var(--warning);" id="hintsDisplay">1</div>
-          </div>
-          <div style="text-align: center; padding: 8px; background: rgba(255,255,255,0.03); border-radius: 8px;">
-            <div style="color: var(--muted); font-size: 0.75rem;">Chance</div>
-            <div style="font-family: 'Orbitron', sans-serif; font-weight: 700; color: var(--neon-purple);" id="statChance">50%</div>
-          </div>
-        </div>
-        <div style="font-size: 0.8rem; color: var(--muted); text-align: center; margin-top: 10px;">
-          Pressione 'D' para usar dica
-        </div>
-      </div>
-
-      <!-- Histórico -->
-      <div class="panel-section">
-        <h3 class="panel-title">📊 Histórico</h3>
-        <div class="log" id="log"></div>
-      </div>
-
-      <!-- Estatísticas Salvas -->
-      <div class="panel-section">
-        <h3 class="panel-title">🏆 Seu Progresso</h3>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.9rem;">
-          <div style="text-align: center; padding: 8px; background: rgba(255,255,255,0.03); border-radius: 8px;">
-            <div style="color: var(--muted); font-size: 0.75rem;">Maior Score</div>
-            <div style="font-family: 'Orbitron', sans-serif; font-weight: 700; color: var(--neon-amber);" id="highScoreDisplay">0</div>
-          </div>
-          <div style="text-align: center; padding: 8px; background: rgba(255,255,255,0.03); border-radius: 8px;">
-            <div style="color: var(--muted); font-size: 0.75rem;">Jogos</div>
-            <div style="font-family: 'Orbitron', sans-serif; font-weight: 700; color: var(--accent);" id="gamesPlayedDisplay">0</div>
-          </div>
-          <div style="text-align: center; padding: 8px; background: rgba(255,255,255,0.03); border-radius: 8px; grid-column: span 2;">
-            <div style="color: var(--muted); font-size: 0.75rem;">Último Jogo</div>
-            <div style="font-family: 'Rajdhani', sans-serif; font-size: 0.8rem; color: var(--muted); margin-top: 4px;" id="lastPlayedDisplay">-</div>
-          </div>
-        </div>
-        <button onclick="resetProgress()" class="secondary" style="width: 100%; margin-top: 12px; padding: 10px; font-size: 0.85rem;">
-          🗑️ Resetar Progresso
-        </button>
+      <div class="plate">
+        <img src="assets/capa-ebook.jpg" width="509" height="434"
+             alt="Capa do ebook O Código da Tonalização, de Ana Ritter Beauty Concept — o guia definitivo de colorimetria para lavatório.">
       </div>
     </div>
-  </div>
+  </header>
 
-  <script src="script.js"></script>
+  <!-- PROBLEM -->
+  <section class="wrap" style="padding-top:var(--sp-8); padding-bottom:var(--sp-8);">
+    <h2 class="display" style="font-size:clamp(1.9rem,3vw,2.3rem); max-width:20ch;">
+      Você mistura com cuidado e o resultado ainda sai diferente do combinado.
+    </h2>
+    <div style="margin-top:var(--sp-6); max-width:760px;">
+      <div class="item">
+        <div class="item-t">O tom puxa pra onde não devia</div>
+        <div class="item-d">Você segue a régua da caixa, mas o fio tinha um fundo de clareamento que ninguém te ensinou a enxergar.</div>
+      </div>
+      <div class="item">
+        <div class="item-t">O retrabalho sai do seu bolso</div>
+        <div class="item-d">Corrigir depois custa tempo de cadeira, produto e a confiança da cliente que já estava no espelho.</div>
+      </div>
+      <div class="item">
+        <div class="item-t">Cada curso ensina uma fórmula diferente</div>
+        <div class="item-d">Sem entender por que a fórmula funciona, você decora receita e trava quando o fio foge do exemplo.</div>
+      </div>
+      <div class="item">
+        <div class="item-t">O medo trava a sua mão</div>
+        <div class="item-d">Sem ler a cor antes de misturar, toda tonalização vira aposta, e você cobra menos do que vale por insegurança.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- METHOD -->
+  <section class="wrap" style="padding-top:var(--sp-8); padding-bottom:var(--sp-8);">
+    <div class="panel-ink grid-2" style="padding:var(--sp-8); display:grid; grid-template-columns:0.85fr 1.15fr; gap:var(--sp-8); align-items:center;">
+      <div class="plate">
+        <img src="assets/pagina-fundamentos.jpg" width="502" height="456" loading="lazy"
+             alt="Página do capítulo Fundamentos da Colorimetria, dentro do ebook.">
+      </div>
+      <div>
+        <h2 class="display" style="font-size:clamp(1.8rem,2.8vw,2.1rem); max-width:22ch;">
+          Primeiro você lê o fio. Só depois encosta na tinta.
+        </h2>
+        <p class="prose" style="color:color-mix(in srgb, var(--color-cream) 80%, transparent); font-size:1.05rem; margin:var(--sp-4) 0;">
+          O método parte da leitura: identificar o fundo de clareamento que o cabelo revelou e só então
+          escolher o reflexo que neutraliza. É por isso que o resultado deixa de ser sorte. Você já sabe
+          o que vai sair antes de misturar.
+        </p>
+        <p class="script" style="font-size:1.6rem; max-width:26ch; margin:0;">"A colorimetria não é decorar fórmulas. É entender como a cor se comporta."</p>
+        <p style="font-size:0.78rem; letter-spacing:0.1em; text-transform:uppercase; color:color-mix(in srgb, var(--color-cream) 60%, transparent); margin-top:var(--sp-2);">Ana Ritter, no capítulo 1</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- STAT BAND -->
+  <section style="background:var(--color-ink); border-top:1px solid var(--color-gold); border-bottom:1px solid var(--color-gold); padding-top:var(--sp-8); padding-bottom:var(--sp-8);">
+    <div class="wrap grid-3" style="display:grid; grid-template-columns:repeat(3,1fr); gap:var(--sp-6);">
+      <div>
+        <div class="display" style="font-size:2.6rem; color:var(--color-gold);">8 receitas</div>
+        <p style="color:color-mix(in srgb, var(--color-cream) 70%, transparent); margin:var(--sp-2) 0 0;">de tonalização morena iluminada, prontas pra copiar</p>
+      </div>
+      <div>
+        <div class="display" style="font-size:2.6rem; color:var(--color-gold);">3 marcas</div>
+        <p style="color:color-mix(in srgb, var(--color-cream) 70%, transparent); margin:var(--sp-2) 0 0;">cada receita já convertida em Wella, L'Oréal e Keune</p>
+      </div>
+      <div>
+        <div class="display" style="font-size:2.6rem; color:var(--color-gold);">R$ 9,99</div>
+        <p style="color:color-mix(in srgb, var(--color-cream) 70%, transparent); margin:var(--sp-2) 0 0;">pagamento único, sem mensalidade</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROOF: o material real -->
+  <section class="wrap" style="padding-top:var(--sp-8); padding-bottom:var(--sp-8);">
+    <h2 class="display" style="font-size:clamp(1.9rem,3vw,2.3rem); max-width:18ch;">
+      Páginas do próprio ebook. Veja com o que você vai trabalhar.
+    </h2>
+    <p class="prose" style="color:color-mix(in srgb, var(--color-charcoal) 65%, transparent); margin:var(--sp-3) 0 var(--sp-6);">
+      A tabela de receitas é a que você abre na cadeira, no meio do atendimento. Cobrimos as fórmulas
+      aqui por um motivo simples: elas são o produto.
+    </p>
+    <div class="grid-proof" style="display:grid; grid-template-columns:1.25fr 0.75fr; gap:var(--sp-6); align-items:start;">
+      <figure class="reveal" style="margin:0;">
+        <div class="plate" style="position:relative;">
+          <img src="assets/pagina-receitas-preview.jpg" width="1035" height="1233" loading="lazy"
+               alt="Tabela do ebook com 8 receitas de tonalização morena iluminada. Cada linha traz o nome da receita e o fundo de clareamento; as colunas com as fórmulas de Wella Professionals, L'Oréal Professionnel e Keune aparecem cobertas — as fórmulas estão dentro do ebook.">
+          <div class="selo">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#C9A24B" stroke-width="1.3"
+                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="4" y="10.5" width="16" height="10" rx="1"/>
+              <path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/>
+            </svg>
+            <p style="margin:0;">As 8 fórmulas,<br>já convertidas<br>nas 3 marcas,<br>estão no ebook.</p>
+          </div>
+        </div>
+        <figcaption class="plate-cap">O guia de consulta rápida: 8 receitas × 3 marcas, com fundo de clareamento e volume de OX</figcaption>
+      </figure>
+      <figure class="reveal" style="margin:0;">
+        <div class="plate">
+          <img src="assets/pagina-estrela-oswald.jpg" width="668" height="419" loading="lazy"
+               alt="Página explicando a Estrela de Oswald, com o círculo cromático de cores primárias, secundárias e terciárias usado para identificar neutralizações.">
+        </div>
+        <figcaption class="plate-cap">A Estrela de Oswald — qual cor neutraliza qual, num mapa só</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- WHAT'S INSIDE -->
+  <section class="wrap grid-2" style="padding-top:var(--sp-8); padding-bottom:var(--sp-8); display:grid; grid-template-columns:0.8fr 1.2fr; gap:var(--sp-6); align-items:start;">
+    <h2 class="display" style="font-size:clamp(1.8rem,2.8vw,2.1rem); max-width:12ch;">O que você leva</h2>
+    <div>
+      <sc-for list="{{ topicos }}" as="t" hint-placeholder-count="6">
+        <div class="item">
+          <div class="item-t">{{ t.title }}</div>
+          <div class="item-d">{{ t.desc }}</div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- DICA — dispositivo do próprio ebook -->
+  <section class="wrap" style="padding:0 0 var(--sp-8);">
+    <div class="dica">
+      <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="#C9A24B" stroke-width="1.2"
+           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none;">
+        <path d="M9 21h6M10 24h4M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2Z"/>
+        <path d="M12 6a3.5 3.5 0 0 0-3.5 3.5"/>
+      </svg>
+      <div>
+        <p class="dica-h">Dica da Ana Ritter</p>
+        <p class="dica-b" style="margin:0;">Nunca escolha o tonalizante apenas pelo número da caixa. Primeiro identifique o fundo de clareamento e só depois escolha o reflexo neutralizante.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOR WHO -->
+  <section class="wrap grid-2" style="padding-top:var(--sp-8); padding-bottom:var(--sp-8); display:grid; grid-template-columns:1fr 1fr; gap:var(--sp-6);">
+    <div>
+      <span class="tag">É pra você que</span>
+      <div style="display:flex; flex-direction:column; gap:var(--sp-4); margin-top:var(--sp-4);">
+        <p style="margin:0; line-height:1.5;">Está aprendendo cabelo e quer segurança antes de tonalizar cliente de verdade</p>
+        <p style="margin:0; line-height:1.5;">Já entregou um resultado diferente do que tinha combinado no espelho</p>
+        <p style="margin:0; line-height:1.5;">Quer entender o porquê da fórmula, não decorar mais uma receita</p>
+      </div>
+    </div>
+    <div>
+      <span class="tag muted">Não é pra você que</span>
+      <div style="display:flex; flex-direction:column; gap:var(--sp-4); margin-top:var(--sp-4); color:color-mix(in srgb, var(--color-charcoal) 65%, transparent);">
+        <p style="margin:0; line-height:1.5;">Busca curso completo de colorimetria com certificado</p>
+        <p style="margin:0; line-height:1.5;">Quer atalho sem aplicar o conteúdo na prática</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- OFFER -->
+  <section id="oferta" class="wrap" style="padding-top:var(--sp-8); padding-bottom:var(--sp-8);">
+    <div class="panel-ink grid-2" style="padding:var(--sp-8); display:grid; grid-template-columns:1.1fr 0.9fr; gap:var(--sp-8); align-items:start;">
+      <div>
+        <h2 class="display" style="font-size:clamp(1.8rem,2.8vw,2.1rem); max-width:18ch;">
+          Tudo o que você precisa pra tonalizar com previsibilidade, hoje.
+        </h2>
+        <ul style="list-style:none; margin:var(--sp-4) 0 0; padding:0; display:flex; flex-direction:column; gap:var(--sp-3); color:color-mix(in srgb, var(--color-cream) 85%, transparent);">
+          <li class="inclui">O ebook completo em PDF, acesso imediato</li>
+          <li class="inclui">A tabela das 8 receitas convertida em 3 marcas</li>
+          <li class="inclui">As tabelas de neutralização e altura de tom</li>
+          <li class="inclui">Garantia de 7 dias, sem letra pequena</li>
+        </ul>
+      </div>
+      <div style="background:var(--color-ivory-paper); color:var(--color-charcoal); border:1px solid var(--color-gold); padding:var(--sp-6);">
+        <div style="display:flex; align-items:baseline; gap:var(--sp-3);">
+          <span style="text-decoration:line-through; color:color-mix(in srgb, var(--color-charcoal) 65%, transparent);">R$ 47,00</span>
+          <span class="display" style="font-size:2.6rem; color:var(--color-gold-deep);">R$ 9,99</span>
+        </div>
+        <p style="color:color-mix(in srgb, var(--color-charcoal) 65%, transparent); font-size:0.85rem; margin:var(--sp-2) 0 var(--sp-6);">Pagamento único · sem mensalidade</p>
+        <!-- ⚠️ TROCAR ANTES DE PUBLICAR: cole aqui a URL real do checkout do produto na Kiwify. -->
+        <a href="COLE-O-LINK-DO-CHECKOUT-AQUI" class="btn btn-gold-ivory btn-block" style="font-size:0.95rem;">Quero garantir meu ebook agora</a>
+        <p style="color:color-mix(in srgb, var(--color-charcoal) 65%, transparent); font-size:0.8rem; text-align:center; margin:var(--sp-4) 0 0;">Garantia de 7 dias — não gostou, seu dinheiro de volta</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="wrap grid-2" style="padding-top:var(--sp-8); padding-bottom:var(--sp-8); display:grid; grid-template-columns:0.7fr 1.3fr; gap:var(--sp-6); align-items:start;">
+    <h2 class="display" style="font-size:clamp(1.7rem,2.6vw,2rem); max-width:10ch;">Perguntas frequentes</h2>
+    <div>
+      <div class="item">
+        <div class="item-t">Preciso já saber colorimetria?</div>
+        <div class="item-d">Não. O ebook parte dos fundamentos — o que é cor, como o fio revela o fundo de clareamento — e só depois chega nas receitas.</div>
+      </div>
+      <div class="item">
+        <div class="item-t">As fórmulas servem pra qual marca?</div>
+        <div class="item-d">Cada uma das 8 receitas vem convertida em Wella Professionals, L'Oréal Professionnel e Keune, com o volume de oxidante indicado.</div>
+      </div>
+      <div class="item">
+        <div class="item-t">Como recebo o material?</div>
+        <div class="item-d">O acesso é liberado na hora, no seu e-mail, assim que o pagamento é confirmado.</div>
+      </div>
+      <div class="item">
+        <div class="item-t">E se eu não gostar?</div>
+        <div class="item-d">Você tem 7 dias de garantia. Se não fizer sentido pra você, devolvemos o valor integral.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section class="wrap" style="padding-bottom:var(--sp-8);">
+    <div class="panel-ink" style="padding:var(--sp-8); display:flex; align-items:center; justify-content:space-between; gap:var(--sp-6); flex-wrap:wrap;">
+      <h2 class="display" style="font-size:clamp(1.6rem,2.6vw,1.9rem); max-width:22ch;">Cada dia sem método é mais um resultado deixado ao acaso.</h2>
+      <a href="#oferta" class="btn btn-gold" style="font-size:0.95rem; flex:none;">Quero aprender o método</a>
+    </div>
+  </section>
+
+  </main>
+
+  <footer class="wrap" style="padding:0 var(--sp-4) var(--sp-8); color:color-mix(in srgb, var(--color-charcoal) 65%, transparent); font-size:0.78rem; display:flex; justify-content:space-between; gap:var(--sp-4); flex-wrap:wrap;">
+    <span>© 2026 O Código da Tonalização · Produto digital de uso individual</span>
+    <span class="script" style="font-size:1.15rem; color:var(--color-gold-deep);">Ana Ritter</span>
+  </footer>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      // Tópicos conferidos contra o PDF em uploads/ — não inventar itens aqui.
+      topicos: [
+        { title: 'A Estrela de Oswald', desc: 'O mapa que mostra qual cor neutraliza qual, e por quê. É a ferramenta que sustenta todo o resto.' },
+        { title: 'Neutralização das cores', desc: 'Amarelo pede violeta, laranja pede azul, vermelho pede verde. Anular o reflexo sem escurecer o fio.' },
+        { title: 'Altura de tom', desc: 'A escala de 1 a 10, do preto ao louro claríssimo, para nomear com precisão o que você está vendo.' },
+        { title: 'Fundo de clareamento', desc: 'O que o cabelo revela durante o clareamento. É sobre esse fundo que o tonalizante age.' },
+        { title: 'Pigmentos artificiais', desc: 'Neutralizar, intensificar, corrigir, depositar e criar reflexo: o que cada pigmento faz de fato.' },
+        { title: '8 receitas de morena iluminada', desc: 'A tabela de consulta rápida, com fórmula equivalente em Wella, L\'Oréal e Keune e o volume de OX.' }
+      ]
+    };
+  }
+
+  componentDidMount() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (!('IntersectionObserver' in window)) return;
+    // O template renderiza no commit do React; espera um frame antes de consultar o DOM.
+    requestAnimationFrame(() => {
+      const targets = document.querySelectorAll('.reveal');
+      if (!targets.length) return;
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+        });
+      }, { threshold: 0.15 });
+      targets.forEach((t) => {
+        // Já visível na carga: fica como está, sem animar e sem piscar.
+        if (t.getBoundingClientRect().top < window.innerHeight * 0.85) return;
+        t.classList.add('pending');
+        io.observe(t);
+      });
+    });
+  }
+}
+</script>
+<!-- impeccable-live-start -->
+<script src="http://localhost:8400/live.js?token=7e33ab93-e308-46b7-9bf5-4d2568d707ad"></script>
+<!-- impeccable-live-end -->
 </body>
 </html>
