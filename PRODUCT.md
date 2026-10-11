@@ -25,8 +25,8 @@ Uso prático na cadeira de atendimento (salão ou atendimento autônomo em casa)
 ## Capabilities and Constraints
 
 - Formato: PDF, entrega imediata por e-mail após confirmação de pagamento.
-- Checkout externo via Kiwify. **A URL real do produto ainda não foi fornecida** — a página carrega o marcador `COLE-O-LINK-DO-CHECKOUT-AQUI`, que precisa ser substituído antes de publicar. (A versão anterior apontava para `https://kiwifi.com.br`, domínio com erro de digitação e sem link de produto.)
-- Preço: R$ 39,90 (âncora de R$ 47,00), pagamento único, sem mensalidade.
+- Checkout externo via Kiwify: `https://pay.kiwify.com.br/0blF0QC`.
+- Preço: R$ 39,90, pagamento único, sem mensalidade; Pix ou cartão parcelado. Sem preço riscado: a âncora é o custo de uma tonalização refeita, não um "de/por".
 - Garantia de 7 dias.
 - Autoria e marca: Ana Ritter — "Ana Ritter Beauty Concept". Subtítulo oficial do ebook: "O guia definitivo de colorimetria para lavatório".
 - Não é: um curso completo de colorimetria com certificado; não promete atalho sem aplicação prática.
@@ -58,5 +58,5 @@ Confirmado por leitura direta de `uploads/O Codigo da Tonalizacao.pdf`:
 
 - Diagnóstico antes de ação: o valor do produto está em prever o resultado, não em corrigir depois.
 - Método, não receita: ensinar o porquê para que o resultado seja replicável em qualquer fio, não só nos casos exemplificados.
-- Sem letra pequena: oferta simples (pagamento único, garantia clara de 7 dias), coerente com um produto de entrada de baixo atrito (R$ 39,90).
+- Sem letra pequena: oferta simples (pagamento único, garantia clara de 7 dias), sem desconto artificial (R$ 39,90).
 - Honestidade de escopo: o produto é deliberadamente estreito (tonalização, não colorimetria completa) — não prometer mais do que entrega.

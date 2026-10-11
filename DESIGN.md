@@ -1,5 +1,3 @@
-<!-- SEED: established with the user before implementation; re-run /impeccable document once the page is rebuilt in this world, to capture the actual tokens and components. -->
-
 ---
 name: O Código da Tonalização
 description: Guia de colorimetria para tonalização — identidade luxo de brand book, preto e dourado sobre ivory.
@@ -9,22 +7,35 @@ colors:
   ivory-paper: "#FAF7F0"
   gold: "#C9A24B"
   gold-deep: "#7D6225"
-  cream-text: "#F4EEE1"
-  charcoal-text: "#1C1A17"
+  cream: "#F4EEE1"
+  charcoal: "#1C1A17"
 typography:
   display:
     fontFamily: "Playfair Display, Georgia, serif"
+    fontSize: "clamp(2.5rem, 4.4vw, 3.6rem)"
     fontWeight: 700
-    letterSpacing: "0.01em"
-    lineHeight: 1.02
+    letterSpacing: "0.005em"
+    lineHeight: 1.05
+  headline:
+    fontFamily: "Playfair Display, Georgia, serif"
+    fontSize: "clamp(1.9rem, 3vw, 2.3rem)"
+    fontWeight: 700
+    letterSpacing: "0.005em"
+    lineHeight: 1.05
   script:
-    fontFamily: "Alex Brush, Great Vibes, cursive"
+    fontFamily: "Alex Brush, cursive"
+    fontSize: "1.6rem"
     fontWeight: 400
+    lineHeight: 1.3
+  title:
+    fontFamily: "Jost, system-ui, sans-serif"
+    fontSize: "1.1rem"
+    fontWeight: 600
   label:
     fontFamily: "Jost, system-ui, sans-serif"
-    fontSize: "0.72rem"
+    fontSize: "0.74rem"
     letterSpacing: "0.18em"
-    fontWeight: 500
+    fontWeight: 600
   body:
     fontFamily: "Jost, system-ui, sans-serif"
     fontSize: "1rem"
@@ -32,20 +43,39 @@ typography:
     lineHeight: 1.6
 rounded:
   none: "0px"
+  sm: "2px"
 spacing:
-  sm: "8px"
-  md: "16px"
-  lg: "32px"
-  xl: "64px"
+  sp-1: "6px"
+  sp-2: "10px"
+  sp-3: "16px"
+  sp-4: "24px"
+  sp-6: "40px"
+  sp-8: "64px"
 components:
-  button-primary:
+  button-gold:
     backgroundColor: "transparent"
     textColor: "{colors.gold}"
-    rounded: "{rounded.none}"
-    padding: "16px 32px"
-  button-primary-hover:
+    rounded: "{rounded.sm}"
+    padding: "16px 40px"
+  button-gold-hover:
     backgroundColor: "{colors.gold}"
     textColor: "{colors.ink}"
+  button-gold-ivory:
+    backgroundColor: "transparent"
+    textColor: "{colors.gold-deep}"
+    rounded: "{rounded.sm}"
+    padding: "16px 40px"
+  button-gold-ivory-hover:
+    backgroundColor: "{colors.gold-deep}"
+    textColor: "{colors.ivory-paper}"
+  panel-ink:
+    backgroundColor: "{colors.ink}"
+    textColor: "{colors.cream}"
+    padding: "64px"
+  offer-card:
+    backgroundColor: "{colors.ivory-paper}"
+    textColor: "{colors.charcoal}"
+    padding: "40px"
 ---
 
 # Design System: O Código da Tonalização
@@ -66,34 +96,39 @@ O sistema abandona por completo o Nocturne (dark roxo-azulado, botões outline n
 
 ## Colors
 
-Paleta de dois fundos (ivory / quase-preto) com um único acento dourado — mono-acento, como o Nocturne que substitui, mas quente em vez de frio.
+Paleta de dois fundos (ivory / quase-preto) com um único acento dourado — mono-acento, como o Nocturne que substitui, mas quente em vez de frio. Os valores vivem no frontmatter (`colors`) e nos tokens `--color-*` do `index.html`; a prosa abaixo só descreve o papel de cada um.
 
 ### Primary
-- **Dourado de Ateliê** (`#C9A24B`): acento único — traços e filetes, bordas de botão, placa e card, ícones de linha, aspas e assinatura em script. Sobre o preto de ateliê passa 7.86:1. Em texto/botão sobre fundo ivory usar sempre o passo mais escuro, **Dourado Profundo** (`#7D6225`, ajustado para manter ≥4.5:1 contra ambos os tons de ivory — WCAG AA) — nunca o dourado claro em texto pequeno sobre ivory, ele fica abaixo de 3:1 e ilegível.
+- **Dourado de Ateliê** (`#C9A24B`, `gold`): acento único — traços e filetes, bordas de botão, moldura de placa e card, ícones de linha, aspas e assinatura em script. Sobre o preto de ateliê passa 7.86:1. Sobre o ivory passa só 2.04:1, então nunca usar para texto ou contorno essencial nesse fundo.
+- **Dourado Profundo** (`#7D6225`, `gold-deep`): o passo para texto, botão e contorno sobre ivory. Mantém 4.9:1 sobre o Ivory de Mat e 5.38:1 sobre o Papel Ivory (WCAG AA).
 
 ### Neutral
-- **Preto de Ateliê** (`#121110`): fundo dos painéis internos (hero, capítulos, cards de destaque) — nunca preto puro CSS (`#000`).
-- **Ivory de Mat** (`#F2ECE0`): fundo da página fora dos painéis — a moldura que dá respiro aos blocos pretos.
-- **Papel Ivory** (`#FAF7F0`): variante mais clara do ivory para cards claros e superfícies elevadas sobre o mat.
-- **Creme sobre Preto** (`#F4EEE1`): cor de texto/título dentro dos painéis pretos — nunca branco puro.
-- **Carvão sobre Ivory** (`#1C1A17`): cor de texto de corpo sobre fundo ivory — nunca preto puro.
+- **Preto de Ateliê** (`#121110`, `ink`): fundo dos painéis internos (hero, capítulos, cards de destaque) — nunca preto puro CSS (`#000`).
+- **Ivory de Mat** (`#F2ECE0`, `ivory`): fundo da página fora dos painéis — a moldura que dá respiro aos blocos pretos.
+- **Papel Ivory** (`#FAF7F0`, `ivory-paper`): variante mais clara do ivory, usada no card de oferta e em superfícies claras elevadas sobre o mat.
+- **Creme sobre Preto** (`#F4EEE1`, `cream`): texto e título dentro dos painéis pretos — nunca branco puro.
+- **Carvão sobre Ivory** (`#1C1A17`, `charcoal`): texto de corpo sobre ivory — nunca preto puro.
 
 ### Named Rules
 **The Two-Ground Rule.** Toda a página vive entre exatamente dois fundos — ivory por fora, quase-preto por dentro dos painéis. Nunca um terceiro tom de fundo neutro por variedade.
 
+> **Divergência em aberto:** o código tem duas exceções a esta regra. (1) A faixa de estatística é full-bleed preta, com filetes dourados em cima e embaixo. (2) O card de oferta usa Papel Ivory como terceiro tom. A regra ou o código ainda precisa ser escolhido; até lá, nenhuma nova exceção.
+
 ## Typography
 
 **Display Font:** Playfair Display (ou serifada de alto contraste equivalente), com Georgia como fallback.
-**Script Font:** Alex Brush ou Great Vibes, para citações da autora e assinatura.
+**Script Font:** Alex Brush, para citações da autora e assinatura (Great Vibes não está carregado).
 **Body/Label Font:** Jost.
 
 **Character:** Uma serifada editorial de alto contraste para autoridade e escala, contra um sans neutro e discretamente tracked para o texto funcional — a mesma tensão "manuscrito de mestre / ficha técnica" que o brand book carimba em cada página.
 
 ### Hierarchy
-- **Display** (700, `clamp(2.4rem, 5vw, 4.2rem)`, line-height 1.02, caixa alta): títulos de capítulo/seção — "FUNDAMENTOS DA COLORIMETRIA", nome do ebook.
-- **Script accent** (400, `clamp(1.4rem, 2.5vw, 2rem)`): citações de autoridade da Ana Ritter e a assinatura; nunca mais de uma ocorrência por seção.
-- **Label** (500–600, 11–12px, letter-spacing 0.18em, caixa alta): legenda de placa, título da Dica e crédito de citação. Sempre **depois** ou **dentro** do bloco que qualifica, nunca acima de um título.
-- **Body** (400, 16px, line-height 1.6): parágrafos explicativos, largura de leitura confortável (60–70ch).
+- **Display** (700, `clamp(2.5rem, 4.4vw, 3.6rem)`, line-height 1.05, caixa alta, `max-width: 14ch`): título do hero. Só no topo da página.
+- **Headline** (700, `clamp(1.9rem, 3vw, 2.3rem)`, line-height 1.05, caixa alta): títulos de seção, como "Perguntas frequentes" e a chamada da oferta. Alguns blocos usam `clamp(1.6rem–2.1rem)` com o mesmo papel; não criar um quarto tamanho.
+- **Script accent** (400, 1.6rem, line-height 1.3): citação da Ana Ritter e assinatura no rodapé. Nunca mais de uma ocorrência por seção.
+- **Title** (600, 1.1rem, Jost): título de item de lista e FAQ, sem caixa alta.
+- **Label** (600, 0.74rem, letter-spacing 0.18em, caixa alta): título da Dica e crédito de citação — só texto curto; frase inteira (como a legenda de placa) fica em sentence case. Sempre **depois** ou **dentro** do bloco que qualifica, nunca acima de um título.
+- **Body** (400, 1rem, line-height 1.6): parágrafos explicativos, largura de leitura de 60–70ch (`.prose`). O lede do hero usa 1.1rem e 52ch.
 
 ### Named Rules
 **The No-Eyebrow Rule.** Nenhum label decorativo acima de um título. O título carrega o próprio peso; se ele precisa de uma etiqueta em cima para fazer sentido, o título é que está fraco. (A landing usava "Capítulo 1 · O problema" como eyebrow — era fantasia: a página de vendas não tem capítulos, o ebook é que tem.)
@@ -102,58 +137,87 @@ Paleta de dois fundos (ivory / quase-preto) com um único acento dourado — mon
 
 ## Layout
 
-Layout assimétrico, alinhado à esquerda, herdado da versão anterior: títulos flush-left, conteúdo colado na margem esquerda com respiro à direita — o brand book usa a mesma lógica com o texto sempre à esquerda do retrato. Painéis pretos funcionam como cards de largura de seção (o "documento dentro da página"), respirando dentro de generosa margem ivory ao redor — nunca full-bleed preto de ponta a ponta como o Nocturne fazia.
+Layout assimétrico, alinhado à esquerda: títulos flush-left, conteúdo colado na margem esquerda com respiro à direita — o brand book usa a mesma lógica com o texto sempre à esquerda do retrato.
+
+- **Container:** `.wrap` com `max-width: 1120px`, centralizado, padding lateral de 24px.
+- **Painéis:** painéis pretos ocupam a largura da seção (o "documento dentro da página"), com margem ivory ao redor. Dentro deles, o padding segue o ritmo de espaçamento: 64px no desktop, 40px no tablet, 24px no celular.
+- **Grades:** 2 colunas assimétricas (1.1fr / 0.9fr, 0.85fr / 1.15fr e similares) e 3 colunas iguais na faixa de estatística. Em `max-width: 860px` todas colapsam para 1 coluna.
+- **Ritmo vertical:** cada seção usa 64px acima e abaixo (`sp-8`).
+- **Faixa de estatística:** única seção full-bleed escura. Fundo preto, filetes dourados de 1px em cima e embaixo. Não usar outra faixa full-bleed como ela.
+- **Barra de compra:** só no celular (até 860px), fixa embaixo, preta com filete dourado no topo. Aparece quando o botão do hero e o da oferta saem da tela; some quando um deles está visível, para não haver dois CTAs disputando o mesmo olhar.
 
 ## Elevation & Depth
 
-Sem sombras difusas. A profundidade vem do contraste ivory/preto entre camadas e de uma borda/linha dourada fina como aresta — o brand book não usa nenhum drop-shadow, só blocos de cor nítidos com bordas finas.
+Sem sombras difusas. A profundidade vem do contraste ivory/preto entre camadas e de uma borda/linha dourada fina como aresta — o brand book não usa nenhum drop-shadow, só blocos de cor nítidos com bordas finas. Nenhum `box-shadow` foi encontrado no `index.html`.
 
 ### Named Rules
 **The Hard-Edge Rule.** Elevação é contraste de cor e uma borda de 1px, nunca `box-shadow` difuso.
 
 ## Shapes
 
-Cantos retos ou quase retos (raio 0–4px) em painéis e botões — o brand book não arredonda nada. Bordas finas de 1px em dourado ou creme translúcido definem os limites dos painéis pretos contra o mat ivory.
+Cantos retos ou quase retos. Botões usam `border-radius: 2px` (`rounded.sm`); tags, painéis e placas usam 0px (`rounded.none`). Bordas finas de 1px em dourado definem os limites dos painéis pretos e das placas contra o mat ivory.
 
 ## Components
 
 ### Buttons
-- **Shape:** cantos retos (raio 0–2px).
-- **Primary:** borda 1px dourada, texto dourado, fundo transparente em repouso — preenche de dourado sólido com texto preto no hover (inversão de contraste, não tint).
-- **Hover / Focus:** inversão sólida no hover; foco com contorno dourado 2px offset.
-- **Secondary:** borda creme/ivory translúcida sobre painel preto, ou carvão translúcido sobre ivory.
+- **Shape:** `border-radius: 2px`, `min-height: 44px`, texto em caixa alta, 0.92rem, peso 600, letter-spacing 0.03em.
+- **Primary (`.btn-gold`):** fundo transparente, borda 1px dourada, texto dourado, padding 16px 40px. Usado sobre painel preto (hero, método, oferta, CTA final). No hover, preenche de dourado sólido com texto preto — inversão de contraste, não tint.
+- **Ivory (`.btn-gold-ivory`):** o mesmo desenho com Dourado Profundo. Usado sobre ivory (nav e card de oferta). No hover, preenche de dourado profundo com texto Papel Ivory. Largura total (`.btn-block`) no card de oferta.
+- **Foco:** contorno de 2px com 2px de offset — dourado profundo sobre ivory, dourado sobre preto.
+- **Secondary / Ghost:** não existem no sistema. Não criar sem decisão explícita.
 
-### Cards / Painéis de Capítulo
-- **Corner Style:** reto (raio 0–4px).
-- **Background:** preto de ateliê (`#121110`), com generosa margem ivory ao redor.
-- **Border:** 1px dourado fino, sem etiqueta na moldura.
-- **Internal Padding:** generoso (`--space-8`/`xl` equivalente), o brand book nunca aperta o conteúdo dentro do painel.
+### Painéis (`.panel-ink`)
+- **Corner Style:** reto (0px).
+- **Background:** Preto de Ateliê (`ink`), texto em Creme (`cream`).
+- **Border:** 1px dourado. Sem etiqueta na moldura.
+- **Internal Padding:** `sp-8` (64px) no desktop, `sp-6` (40px) até 860px, `sp-4` (24px) até 480px.
+
+### Card de oferta (`.offer-card`)
+- **Background:** Papel Ivory (`ivory-paper`), borda 1px dourada, texto em Carvão (`charcoal`). Preço em Display com Dourado Profundo.
+- **Padding:** `sp-6` (40px), `sp-4` (24px) no celular.
+- **Nota:** é o único card claro. Ver a divergência em Named Rules de Colors.
 
 ### Placa de Material (`.plate`) — componente-assinatura
-- **O que é:** a moldura em que páginas reais do ebook entram na landing: borda 1px dourada, fundo preto de ateliê, imagem a 100% de largura, legenda tracked em caixa alta abaixo.
+- **O que é:** a moldura em que páginas reais do ebook entram na landing: borda 1px dourada, fundo preto de ateliê, imagem a 100% de largura, legenda em sentence case abaixo, 0.86rem (`.plate-cap`).
 - **Por quê:** a página prova o produto mostrando o próprio material. A moldura faz a página lida como artefato citado, não como imagem de fundo decorativa.
 - **Nunca:** sangrar essas imagens até a borda da tela nem aplicar blend mode nelas — são artefatos de design acabados, não fotos para fundir no fundo.
+- **Selo (`.selo`):** sobreposição centralizada sobre a tabela de receitas, com ícone de cadeado em traço dourado e texto em dourado. O borrão das fórmulas está gravado no próprio JPEG, não em CSS.
 
 ### Dica da Ana Ritter (`.dica`) — componente-assinatura
-- **O que é:** painel preto com borda dourada, ícone de lâmpada em traço dourado, título tracked em caixa alta e corpo em creme. É o mesmo dispositivo que aparece dentro do ebook, trazido para a landing.
+- **O que é:** painel preto com borda dourada, ícone de lâmpada em traço dourado (40px), título tracked em caixa alta e corpo em creme. É o mesmo dispositivo que aparece dentro do ebook, trazido para a landing.
 - **Uso:** no máximo uma ocorrência por página; é a voz da autora interrompendo, não um card de conteúdo.
 
 ### Marca de item (`.inclui`)
 - **Style:** um traço dourado desenhado de 14×1px via `::before`, alinhado à baseline. Substitui bullets e travessões — o sistema não usa glifo Unicode como ícone.
 
+### Tag (`.tag`)
+- **Style:** contorno de 1px em dourado profundo, caixa alta, 0.72rem, letter-spacing 0.1em, peso 600, padding 6px 14px, sem arredondamento.
+- **Variante `.muted`:** contorno e texto em carvão a 30% e 65%, para o lado "não é pra você".
+
+### Itens e listas (`.item`)
+- **Style:** blocos separados por filete de 1px em carvão a 12%, padding vertical de 24px. Título em `title`, descrição em carvão a 65% com largura máxima de 60ch.
+
 ### Citações de Autoridade
 - **Style:** script dourado, isolado, sem aspas tipográficas grandes ao redor — o próprio traço da fonte já assina a citação. Sempre creditada logo abaixo, em label tracked.
+
+### Reveal (motion)
+- **Único momento de motion:** as placas de material entram uma vez, com fade e deslizamento de 18px, em 0.6s com `cubic-bezier(0.16, 1, 0.3, 1)`, com atraso de 0.12s no segundo item. Só com `prefers-reduced-motion: no-preference`. Sem JS, nada some.
+- **Barra de compra:** desliza em 0.3s ease. Sem animação com reduced motion.
 
 ## Do's and Don'ts
 
 ### Do:
-- **Do** usar exatamente dois fundos (ivory / preto de ateliê) em toda a página.
+- **Do** usar exatamente dois fundos (ivory / preto de ateliê) em toda a página, salvo as exceções registradas em Named Rules.
 - **Do** reservar o script dourado só para citações de autoridade e assinatura.
 - **Do** manter o traço dourado fino como assinatura de marcas e molduras — nunca preenchimento de área grande.
-- **Do** manter cantos retos em botões, cards e painéis.
+- **Do** manter cantos retos ou de 2px em botões, cards e painéis.
+- **Do** usar Dourado Profundo para texto, botão e contorno sobre ivory.
 
 ### Don't:
 - **Don't** usar preto puro (`#000`) ou branco puro (`#fff`) — sempre os tons de carvão/creme definidos acima.
 - **Don't** usar sombras difusas (`box-shadow` ambient) — profundidade vem de contraste de cor e borda de 1px.
 - **Don't** misturar o script dourado em corpo de texto ou botões — ele é só para voz de autoridade.
+- **Don't** usar dourado claro (`gold`) como texto ou contorno essencial sobre ivory (2.04:1).
 - **Don't** reintroduzir o roxo-azulado do Nocturne ou qualquer segundo acento de cor — o sistema é mono-acento dourado.
+- **Don't** adicionar uma segunda faixa full-bleed escura além da faixa de estatística.
+- **Don't** colocar hex direto no HTML ou no CSS da página. Usar `var(--color-*)`, inclusive nos atributos `stroke` dos ícones SVG.

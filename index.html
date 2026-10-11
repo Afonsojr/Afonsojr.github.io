@@ -1,8 +1,18 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>O Código da Tonalização — Ana Ritter</title>
+<meta name="description" content="Guia de colorimetria para lavatório: aprenda a ler o fundo de clareamento do fio e leve 8 receitas de tonalização prontas em Wella, L'Oréal e Keune.">
+<!-- Tags estáticas no <head>: crawlers do WhatsApp/Instagram não executam o runtime da omelette. -->
+<meta property="og:type" content="product">
+<meta property="og:title" content="O Código da Tonalização — pare de descobrir o tom depois que já aplicou">
+<meta property="og:description" content="Aprenda a ler o fio antes de misturar e leve 8 receitas prontas de morena iluminada, convertidas em Wella, L'Oréal e Keune.">
+<meta property="og:image" content="https://afonsojr.github.io/assets/capa-ebook.jpg">
+<meta property="og:url" content="https://afonsojr.github.io/">
+<meta property="og:locale" content="pt_BR">
+<meta name="twitter:card" content="summary_large_image">
 <script src="./support.js"></script>
 </head>
 <body>
@@ -54,7 +64,8 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
     img { display: block; max-width: 100%; height: auto; }
     .wrap { max-width: 1120px; margin: 0 auto; padding: 0 var(--sp-4); }
 
-    .display { font-family: var(--font-display); font-weight: 700; letter-spacing: 0.005em; line-height: 1.05; margin: 0; text-transform: uppercase; }
+    .display { font-family: var(--font-display); font-weight: 700; letter-spacing: 0.005em; line-height: 1.05; margin: 0; text-transform: uppercase; text-wrap: balance; }
+    ::selection { background: var(--color-gold); color: var(--color-ink); }
     .script { font-family: var(--font-script); font-weight: 400; line-height: 1.3; color: var(--color-gold); }
     .lede { font-size: 1.1rem; max-width: 52ch; }
     .prose { max-width: 66ch; }
@@ -69,9 +80,11 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
        nunca sangradas, para lerem como artefato citado e não como fundo. */
     .plate { border: 1px solid var(--color-gold); background: var(--color-ink); }
     .plate img { width: 100%; }
+    /* Legenda é frase inteira (~90 caracteres): em caixa alta e 0.74rem ficava
+       ilegível no celular. Caixa alta tracked fica para rótulos curtos. */
     .plate-cap {
-      font-size: 0.74rem; letter-spacing: 0.1em; text-transform: uppercase;
-      color: color-mix(in srgb, var(--color-charcoal) 65%, transparent);
+      font-size: 0.86rem; line-height: 1.45;
+      color: color-mix(in srgb, var(--color-charcoal) 70%, transparent);
       margin-top: var(--sp-2);
     }
     .panel-ink .plate-cap { color: color-mix(in srgb, var(--color-cream) 70%, transparent); }
@@ -90,7 +103,7 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
     .btn-gold-ivory:hover { background: var(--color-gold-deep); color: var(--color-ivory-paper); }
     .btn-block { width: 100%; }
     .btn:focus-visible { outline: 2px solid var(--color-gold-deep); outline-offset: 2px; }
-    .panel-ink .btn:focus-visible { outline-color: var(--color-gold); }
+    .panel-ink .btn:focus-visible, .buy-bar .btn:focus-visible { outline-color: var(--color-gold); }
 
     .item { padding: var(--sp-4) 0; }
     .item + .item { border-top: 1px solid color-mix(in srgb, var(--color-charcoal) 12%, transparent); }
@@ -101,7 +114,7 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
     .dica {
       background: var(--color-ink); border: 1px solid var(--color-gold);
       padding: var(--sp-6); display: grid; grid-template-columns: 40px 1fr; gap: var(--sp-4);
-      align-items: start;
+      align-items: start; color: var(--color-gold);
     }
     .dica-h {
       font-size: 0.74rem; letter-spacing: 0.18em; text-transform: uppercase;
@@ -142,7 +155,7 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
       .reveal.pending { opacity: 0; transform: translateY(18px); }
       .reveal.pending.in {
         opacity: 1; transform: none;
-        transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+        transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
       }
       .reveal.pending:nth-child(2).in { transition-delay: 0.12s; }
     }
@@ -152,6 +165,35 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
       .display-hero { font-size: clamp(2.1rem, 8vw, 2.7rem) !important; }
       .panel-ink, .dica { padding: var(--sp-6) !important; }
     }
+
+    /* No celular o .wrap já dá o respiro lateral; somado ao padding dos painéis,
+       sobravam ~250px de conteúdo e os botões quebravam em 3-4 linhas. */
+    @media (max-width: 480px) {
+      .panel-ink, .dica, .offer-card { padding: var(--sp-4) !important; }
+      .dica { grid-template-columns: 1fr; }
+      .panel-ink .btn { width: 100%; flex: auto !important; padding-left: var(--sp-4); padding-right: var(--sp-4); }
+    }
+
+    /* Barra de compra fixa, só no celular: a página passa de 10 mil px e o CTA
+       some de vista. Fica escondida enquanto o botão do hero ou a oferta estão na tela,
+       pra nunca haver dois CTAs disputando o mesmo olhar. */
+    .buy-bar { display: none; }
+    @media (max-width: 860px) {
+      .buy-bar {
+        display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3);
+        position: fixed; left: 0; right: 0; bottom: 0; z-index: 10;
+        padding: var(--sp-2) var(--sp-4) calc(var(--sp-2) + env(safe-area-inset-bottom));
+        background: var(--color-ink); border-top: 1px solid var(--color-gold); color: var(--color-cream);
+        transform: translateY(100%); visibility: hidden;
+        transition: transform 0.3s ease, visibility 0s linear 0.3s;
+      }
+      .buy-bar.show { transform: none; visibility: visible; transition: transform 0.3s ease; }
+      .buy-bar .btn { padding: var(--sp-2) var(--sp-4); font-size: 0.8rem; flex: none; }
+      footer { padding-bottom: 96px !important; }
+    }
+    @media (max-width: 860px) and (prefers-reduced-motion: reduce) {
+      .buy-bar, .buy-bar.show { transition: none; }
+    }
   </style>
 </helmet>
 
@@ -159,7 +201,7 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
 
   <nav class="wrap" style="padding:var(--sp-4) var(--sp-4); display:flex; align-items:center; justify-content:space-between; gap:var(--sp-3);">
     <span class="display" style="font-size:1.05rem;">O Código da Tonalização</span>
-    <a href="https://pay.kiwify.com.br/0blF0QC" class="btn btn-gold-ivory" style="padding:var(--sp-2) var(--sp-4); font-size:0.78rem;">Quero o ebook</a>
+    <a href="https://pay.kiwify.com.br/0blF0QC" class="btn btn-gold-ivory" style="padding:var(--sp-2) var(--sp-4); font-size:0.78rem; white-space:nowrap;">Quero o ebook</a>
   </nav>
 
   <main>
@@ -249,8 +291,8 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
         <p style="color:color-mix(in srgb, var(--color-cream) 70%, transparent); margin:var(--sp-2) 0 0;">cada receita já convertida em Wella, L'Oréal e Keune</p>
       </div>
       <div>
-        <div class="display" style="font-size:2.6rem; color:var(--color-gold);">R$ 39,90</div>
-        <p style="color:color-mix(in srgb, var(--color-cream) 70%, transparent); margin:var(--sp-2) 0 0;">pagamento único, sem mensalidade</p>
+        <div class="display" style="font-size:2.6rem; color:var(--color-gold);">7 dias</div>
+        <p style="color:color-mix(in srgb, var(--color-cream) 70%, transparent); margin:var(--sp-2) 0 0;">de garantia: não fez sentido, você recebe o valor de volta</p>
       </div>
     </div>
   </section>
@@ -270,7 +312,7 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
           <img src="assets/pagina-receitas-preview.jpg" width="1035" height="1233" loading="lazy"
                alt="Tabela do ebook com 8 receitas de tonalização morena iluminada. Cada linha traz o nome da receita e o fundo de clareamento; as colunas com as fórmulas de Wella Professionals, L'Oréal Professionnel e Keune aparecem cobertas — as fórmulas estão dentro do ebook.">
           <div class="selo">
-            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#C9A24B" stroke-width="1.3"
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.3"
                  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <rect x="4" y="10.5" width="16" height="10" rx="1"/>
               <path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/>
@@ -306,7 +348,7 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
   <!-- DICA — dispositivo do próprio ebook -->
   <section class="wrap" style="padding:0 0 var(--sp-8);">
     <div class="dica">
-      <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="#C9A24B" stroke-width="1.2"
+      <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.2"
            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none;">
         <path d="M9 21h6M10 24h4M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2Z"/>
         <path d="M12 6a3.5 3.5 0 0 0-3.5 3.5"/>
@@ -333,6 +375,7 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
       <div style="display:flex; flex-direction:column; gap:var(--sp-4); margin-top:var(--sp-4); color:color-mix(in srgb, var(--color-charcoal) 65%, transparent);">
         <p style="margin:0; line-height:1.5;">Busca curso completo de colorimetria com certificado</p>
         <p style="margin:0; line-height:1.5;">Quer atalho sem aplicar o conteúdo na prática</p>
+        <p style="margin:0; line-height:1.5;">Procura fórmulas prontas para loiras — as 8 receitas são de morena iluminada</p>
       </div>
     </div>
   </section>
@@ -350,15 +393,17 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
           <li class="inclui">As tabelas de neutralização e altura de tom</li>
           <li class="inclui">Garantia de 7 dias, sem letra pequena</li>
         </ul>
+        <p style="color:color-mix(in srgb, var(--color-cream) 70%, transparent); margin:var(--sp-6) 0 0; max-width:48ch;">
+          Uma única tonalização refeita já custa mais que o ebook: produto jogado fora, uma hora de cadeira
+          e a confiança da cliente. O método se paga no primeiro atendimento que sai certo de primeira.
+        </p>
       </div>
-      <div style="background:var(--color-ivory-paper); color:var(--color-charcoal); border:1px solid var(--color-gold); padding:var(--sp-6);">
-        <div style="display:flex; align-items:baseline; gap:var(--sp-3);">
-          <span style="text-decoration:line-through; color:color-mix(in srgb, var(--color-charcoal) 65%, transparent);">R$ 47,00</span>
-          <span class="display" style="font-size:2.6rem; color:var(--color-gold-deep);">R$ 39,90</span>
-        </div>
-        <p style="color:color-mix(in srgb, var(--color-charcoal) 65%, transparent); font-size:0.85rem; margin:var(--sp-2) 0 var(--sp-6);">Pagamento único · sem mensalidade</p>
+      <div class="offer-card" style="background:var(--color-ivory-paper); color:var(--color-charcoal); border:1px solid var(--color-gold); padding:var(--sp-6);">
+        <span class="display" style="font-size:2.6rem; color:var(--color-gold-deep);">R$ 39,90</span>
+        <p style="color:color-mix(in srgb, var(--color-charcoal) 65%, transparent); font-size:0.85rem; margin:var(--sp-2) 0 var(--sp-6);">Pagamento único · Pix ou cartão, com parcelamento</p>
         <a href="https://pay.kiwify.com.br/0blF0QC" class="btn btn-gold-ivory btn-block" style="font-size:0.95rem;">Quero garantir meu ebook agora</a>
         <p style="color:color-mix(in srgb, var(--color-charcoal) 65%, transparent); font-size:0.8rem; text-align:center; margin:var(--sp-4) 0 0;">Garantia de 7 dias — não gostou, seu dinheiro de volta</p>
+        <p style="color:color-mix(in srgb, var(--color-charcoal) 65%, transparent); font-size:0.8rem; text-align:center; margin:var(--sp-2) 0 0;">Checkout seguro pela Kiwify</p>
       </div>
     </div>
   </section>
@@ -374,6 +419,18 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
       <div class="item">
         <div class="item-t">As fórmulas servem pra qual marca?</div>
         <div class="item-d">Cada uma das 8 receitas vem convertida em Wella Professionals, L'Oréal Professionnel e Keune, com o volume de oxidante indicado.</div>
+      </div>
+      <div class="item">
+        <div class="item-t">Serve pra quem trabalha com loiras?</div>
+        <div class="item-d">O método — ler o fundo de clareamento e escolher o reflexo que neutraliza — vale pra qualquer fio. Mas as 8 receitas prontas são de morena iluminada; se você busca fórmulas prontas de loiro, este ebook não traz.</div>
+      </div>
+      <div class="item">
+        <div class="item-t">Consigo usar no celular, na hora do atendimento?</div>
+        <div class="item-d">Sim. É um PDF: abre no celular, no tablet ou no computador, e dá pra imprimir a tabela de receitas pra deixar na bancada.</div>
+      </div>
+      <div class="item">
+        <div class="item-t">Quais as formas de pagamento?</div>
+        <div class="item-d">Pix ou cartão de crédito, com parcelamento, num checkout seguro da Kiwify. Pagamento único, sem mensalidade.</div>
       </div>
       <div class="item">
         <div class="item-t">Como recebo o material?</div>
@@ -400,6 +457,14 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
     <span>© 2026 O Código da Tonalização · Produto digital de uso individual</span>
     <span class="script" style="font-size:1.15rem; color:var(--color-gold-deep);">Ana Ritter</span>
   </footer>
+
+  <div class="buy-bar" aria-label="Comprar o ebook">
+    <div>
+      <div class="display" style="font-size:1.3rem; color:var(--color-gold);">R$ 39,90</div>
+      <div style="font-size:0.75rem; color:color-mix(in srgb, var(--color-cream) 70%, transparent);">Garantia de 7 dias</div>
+    </div>
+    <a href="https://pay.kiwify.com.br/0blF0QC" class="btn btn-gold">Quero o ebook</a>
+  </div>
 </div>
 
 </x-dc>
@@ -420,6 +485,7 @@ class Component extends DCLogic {
   }
 
   componentDidMount() {
+    requestAnimationFrame(() => this.watchBuyBar());
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     if (!('IntersectionObserver' in window)) return;
     // O template renderiza no commit do React; espera um frame antes de consultar o DOM.
@@ -438,6 +504,19 @@ class Component extends DCLogic {
         io.observe(t);
       });
     });
+  }
+
+  watchBuyBar() {
+    const bar = document.querySelector('.buy-bar');
+    const anchors = [document.querySelector('header .btn'), document.querySelector('#oferta')];
+    if (!bar || anchors.includes(null) || !('IntersectionObserver' in window)) return;
+    const onScreen = new Set();
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => e.isIntersecting ? onScreen.add(e.target) : onScreen.delete(e.target));
+      // Acima do hero (topo da página) o botão do hero está visível, então a barra também fica oculta.
+      bar.classList.toggle('show', onScreen.size === 0);
+    });
+    anchors.forEach((a) => io.observe(a));
   }
 }
 </script>
